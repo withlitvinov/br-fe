@@ -18,6 +18,7 @@ export type CreatePersonProfileDto = {
 
 export interface IPersonProfilesApi {
   all(): Promise<PersonProfile[]>;
+  getById(id: string): Promise<PersonProfile>;
   create(payload: CreatePersonProfileDto): Promise<void>;
 }
 
@@ -31,6 +32,13 @@ export class PersonProfilesApi implements IPersonProfilesApi {
   async all(): Promise<PersonProfile[]> {
     return this.httpService.get<PersonProfile[]>(
       '/person_profiles',
+      EndpointVersion.V1,
+    );
+  }
+
+  async getById(id: string): Promise<PersonProfile> {
+    return this.httpService.get<PersonProfile>(
+      `/person_profiles/${id}`,
       EndpointVersion.V1,
     );
   }

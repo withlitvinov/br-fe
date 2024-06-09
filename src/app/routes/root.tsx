@@ -1,4 +1,5 @@
 import { ComponentProps } from 'react';
+import { Link } from 'react-router-dom';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 
 import { DiSymbols } from '@/core/di';
@@ -64,7 +65,10 @@ function Root() {
         <ul>
           {data.map((person) => (
             <li key={person.id}>
-              {person.name} - {person.birthday}
+              <span>
+                {person.name} - {person.birthday}
+              </span>
+              <Link to={person.id}>Explore</Link>
             </li>
           ))}
         </ul>
