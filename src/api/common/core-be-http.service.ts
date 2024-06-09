@@ -21,9 +21,11 @@ export interface ICoreBeHttpService {
   ): Promise<T>;
 }
 
+const DEFAULT_BASE_API_URL = 'http://127.0.0.1:4000/api';
+
 @injectable()
 export class CoreBeHttpService implements ICoreBeHttpService {
-  private baseUrl: string = 'http://127.0.0.1:4000/api';
+  private baseUrl = import.meta.env.BASE_API_URL ?? DEFAULT_BASE_API_URL;
 
   constructor(
     @inject(DiSymbols.HttpService) private httpService: IHttpService,
