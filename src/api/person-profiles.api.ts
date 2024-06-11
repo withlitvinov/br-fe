@@ -24,28 +24,27 @@ export interface IPersonProfilesApi {
 
 @injectable()
 export class PersonProfilesApi implements IPersonProfilesApi {
+  private path = '/profiles';
+
   constructor(
     @inject(DiSymbols.CoreBeHttpService)
     private httpService: ICoreBeHttpService,
   ) {}
 
   async all(): Promise<PersonProfile[]> {
-    return this.httpService.get<PersonProfile[]>(
-      '/person_profiles',
-      EndpointVersion.V1,
-    );
+    return this.httpService.get<PersonProfile[]>(this.path, EndpointVersion.V1);
   }
 
   async getById(id: string): Promise<PersonProfile> {
     return this.httpService.get<PersonProfile>(
-      `/person_profiles/${id}`,
+      `${this.path}/${id}`,
       EndpointVersion.V1,
     );
   }
 
   async create(payload: CreatePersonProfileDto): Promise<void> {
     return this.httpService.post<void, CreatePersonProfileDto>(
-      '/person_profiles',
+      this.path,
       {
         name: payload.name,
         birthday: payload.birthday,
