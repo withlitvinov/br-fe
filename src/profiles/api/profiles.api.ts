@@ -34,7 +34,11 @@ export class ProfilesApi {
   async createOne(createProfileDto: CreateOneProfileDto) {
     const dto: CreateOneProfileDto = {
       name: createProfileDto.name,
-      birthday: createProfileDto.birthday,
+      birthday: {
+        year: createProfileDto.birthday.year,
+        month: createProfileDto.birthday.month,
+        day: createProfileDto.birthday.day,
+      },
     };
 
     return this.coreApiHttpService.post<

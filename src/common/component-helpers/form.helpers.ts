@@ -5,6 +5,6 @@ export enum SubmitStatus {
 
 export type PostSubmitFn = (submitStatus: SubmitStatus) => void;
 
-export type BaseFormProps<FormState> = {
-  onSubmit: (data: FormState, postSubmitFn: PostSubmitFn) => void;
+export type BaseFormProps<FormState, SubmitPayload = FormState> = {
+  onSubmit: (payload: SubmitPayload, postSubmitFn: PostSubmitFn) => void;
 };

@@ -1,4 +1,8 @@
 export type CreateOneProfileDto = {
   name: string;
-  birthday: string;
+  birthday: {
+    year: number | null;
+    month: number;
+    day: number;
+  };
 };

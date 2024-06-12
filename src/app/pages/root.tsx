@@ -27,18 +27,26 @@ export function RootPage() {
     mutationFn: (createProfileDto: CreateOneProfileDto) => {
       return container.get(ProfilesApi).createOne({
         name: createProfileDto.name,
-        birthday: createProfileDto.birthday,
+        birthday: {
+          year: createProfileDto.birthday.year,
+          month: createProfileDto.birthday.month,
+          day: createProfileDto.birthday.day,
+        },
       });
     },
   });
 
   const handleSubmitProfileCreation: ComponentProps<
     typeof AddProfileForm
-  >['onSubmit'] = (data, postSubmitFn) => {
+  >['onSubmit'] = (payload, postSubmitFn) => {
     mutate(
       {
-        name: data.name,
-        birthday: data.birthday,
+        name: payload.name,
+        birthday: {
+          year: payload.birthday.year,
+          month: payload.birthday.month,
+          day: payload.birthday.day,
+        },
       },
       {
         onSuccess: () => {
