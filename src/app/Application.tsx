@@ -1,21 +1,18 @@
 import { createBrowserRouter, RouterProvider } from 'react-router-dom';
 
-import Root from './routes/root';
-import ExploreProfile from './routes/explore-profile';
+import { RootPage, ExploreProfilePage } from './pages';
 
 const router = createBrowserRouter([
   {
     path: '/',
-    element: <Root />,
+    element: <RootPage />,
   },
   {
     path: '/:id',
-    element: <ExploreProfile />,
+    element: <ExploreProfilePage />,
   },
 ]);
 
-function Application() {
+export function Application() {
   return <RouterProvider router={router} />;
 }
-
-export default Application;

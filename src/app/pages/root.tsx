@@ -2,39 +2,38 @@ import { ComponentProps } from 'react';
 import { Link } from 'react-router-dom';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 
-import { DiSymbols } from '@/core/di';
-import { SubmitStatus } from '@/core/component-helpers';
-import { CreatePersonProfileDto, IPersonProfilesApi } from '@/api';
-import { useDi } from '@/global-contexts';
-import { AddPersonProfileForm } from '@/app/modules/person-profiles';
+import { SubmitStatus, useDi } from '@/common';
+import {
+  ProfilesApi,
+  AddProfileForm,
+  type CreateOneProfileDto,
+} from '@/profiles';
 
-function Root() {
+import { CREATE_ONE_PROFILE, PROFILE_LIST } from '../constants';
+
+export function RootPage() {
   const container = useDi();
   const queryClient = useQueryClient();
 
   const { data } = useQuery({
-    queryKey: ['personProfiles'],
+    queryKey: [PROFILE_LIST],
     queryFn: () => {
-      return container
-        .get<IPersonProfilesApi>(DiSymbols.PersonProfilesApi)
-        .all();
+      return container.get(ProfilesApi).getMany();
     },
   });
 
   const { mutate } = useMutation({
-    mutationKey: ['createPersonProfile'],
-    mutationFn: (payload: CreatePersonProfileDto) => {
-      return container
-        .get<IPersonProfilesApi>(DiSymbols.PersonProfilesApi)
-        .create({
-          name: payload.name,
-          birthday: payload.birthday,
-        });
+    mutationKey: [CREATE_ONE_PROFILE],
+    mutationFn: (createProfileDto: CreateOneProfileDto) => {
+      return container.get(ProfilesApi).createOne({
+        name: createProfileDto.name,
+        birthday: createProfileDto.birthday,
+      });
     },
   });
 
-  const handleCreateNewPersonProfile: ComponentProps<
-    typeof AddPersonProfileForm
+  const handleSubmitProfileCreation: ComponentProps<
+    typeof AddProfileForm
   >['onSubmit'] = (data, postSubmitFn) => {
     mutate(
       {
@@ -45,7 +44,7 @@ function Root() {
         onSuccess: () => {
           postSubmitFn(SubmitStatus.Ok);
           queryClient.invalidateQueries({
-            queryKey: ['personProfiles'],
+            queryKey: [PROFILE_LIST],
           });
         },
         onError: () => {
@@ -59,7 +58,7 @@ function Root() {
     <>
       <h1>Person profiles</h1>
       <h2>Add new</h2>
-      <AddPersonProfileForm onSubmit={handleCreateNewPersonProfile} />
+      <AddProfileForm onSubmit={handleSubmitProfileCreation} />
       <h2>Existed profiles</h2>
       {data && (
         <ul>
@@ -76,5 +75,3 @@ function Root() {
     </>
   );
 }
-
-export default Root;

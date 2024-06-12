@@ -1,6 +1,6 @@
 import { useContext } from 'react';
 
-import { DiContext } from './di.provider';
+import { DiContext } from './di.provider.tsx';
 
 function useDi() {
   const ctx = useContext(DiContext);

@@ -1,6 +1,6 @@
 import { useForm } from 'react-hook-form';
 
-import { BaseFormProps, SubmitStatus } from '@/core/component-helpers';
+import { BaseFormProps, SubmitStatus } from '@/common';
 
 type AddPersonProfileFormState = {
   name: string;
@@ -9,7 +9,7 @@ type AddPersonProfileFormState = {
 
 type AddPersonProfileFormProps = BaseFormProps<AddPersonProfileFormState> & {};
 
-function AddPersonProfileForm({ onSubmit }: AddPersonProfileFormProps) {
+export function AddProfileForm({ onSubmit }: AddPersonProfileFormProps) {
   const { register, handleSubmit, reset } =
     useForm<AddPersonProfileFormState>();
 
@@ -29,5 +29,3 @@ function AddPersonProfileForm({ onSubmit }: AddPersonProfileFormProps) {
     </form>
   );
 }
-
-export default AddPersonProfileForm;

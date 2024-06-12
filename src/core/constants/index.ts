@@ -1,1 +1,1 @@
-export * from './endpoint-version.enum';
+export * from './di-tokens.constants';

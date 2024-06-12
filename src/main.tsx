@@ -6,28 +6,20 @@ import ReactDOM from 'react-dom/client';
 import { Container } from 'inversify';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 
-import { type IHttpService, HttpService } from '@/core/http';
-import { DiSymbols } from '@/core/di';
-import {
-  type ICoreBeHttpService,
-  type IPersonProfilesApi,
-  CoreBeHttpService,
-  PersonProfilesApi,
-} from '@/api';
+import { type IHttpService, HttpService, DiTokens } from './core';
+import { CoreApiHttpService, DiProvider } from './common';
 
-import { DiProvider } from '@/global-contexts';
+// Features
+import { ProfilesApi } from './profiles';
 
 import { Application } from './app';
 
 const rootContainer = new Container();
 
-rootContainer.bind<IHttpService>(DiSymbols.HttpService).to(HttpService);
-rootContainer
-  .bind<ICoreBeHttpService>(DiSymbols.CoreBeHttpService)
-  .to(CoreBeHttpService);
-rootContainer
-  .bind<IPersonProfilesApi>(DiSymbols.PersonProfilesApi)
-  .to(PersonProfilesApi);
+rootContainer.bind<IHttpService>(DiTokens.HttpService).to(HttpService);
+
+rootContainer.bind(CoreApiHttpService).toSelf();
+rootContainer.bind(ProfilesApi).toSelf();
 
 const queryClient = new QueryClient();
 

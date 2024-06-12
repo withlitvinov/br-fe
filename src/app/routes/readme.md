@@ -1,1 +1,0 @@
-This folder contains routes (pages) that will be displayed to the user.

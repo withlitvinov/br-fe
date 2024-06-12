@@ -1,0 +1,1 @@
+export const CREATE_ONE_PROFILE = 'CREATE_ONE_PROFILE';
