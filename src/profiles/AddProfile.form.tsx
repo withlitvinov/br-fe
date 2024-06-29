@@ -65,7 +65,7 @@ export function AddProfileForm({ onSubmit }: AddPersonProfileFormProps) {
         >
           <input
             type="text"
-            placeholder="Birthday year"
+            placeholder="Birthday year (Optional)"
             {...register('birthday.year')}
           />
           <input

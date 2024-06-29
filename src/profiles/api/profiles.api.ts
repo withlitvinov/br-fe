@@ -1,6 +1,12 @@
 import { inject, injectable } from 'inversify';
 
-import { CoreApiHttpService, EndpointVersion, Uuid } from '@/common';
+import {
+  type Camelize,
+  CoreApiHttpService,
+  EndpointVersion,
+  type Uuid,
+  camelize,
+} from '@/common';
 
 import type {
   CreateOneProfileDto,
@@ -17,10 +23,12 @@ export class ProfilesApi {
     @inject(CoreApiHttpService) private coreApiHttpService: CoreApiHttpService,
   ) {}
 
-  async getMany() {
-    return this.coreApiHttpService.get<GetManyProfilesResponse>(
-      this.path,
-      EndpointVersion.V1,
+  async getMany(): Promise<Camelize<GetManyProfilesResponse>> {
+    return camelize(
+      await this.coreApiHttpService.get<GetManyProfilesResponse>(
+        this.path,
+        EndpointVersion.V1,
+      ),
     );
   }
 

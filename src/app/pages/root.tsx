@@ -1,6 +1,9 @@
 import { ComponentProps } from 'react';
 import { Link } from 'react-router-dom';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+import dayjs from 'dayjs';
+import customFormat from 'dayjs/plugin/customParseFormat';
+dayjs.extend(customFormat);
 
 import { SubmitStatus, useDi } from '@/common';
 import {
@@ -63,23 +66,111 @@ export function RootPage() {
   };
 
   return (
-    <>
+    <div className="page root">
       <h1>Person profiles</h1>
-      <h2>Add new</h2>
-      <AddProfileForm onSubmit={handleSubmitProfileCreation} />
-      <h2>Existed profiles</h2>
-      {data && (
-        <ul>
-          {data.map((person) => (
-            <li key={person.id}>
-              <span>
-                {person.name} - {person.birthday}
-              </span>
-              <Link to={person.id}>Explore</Link>
-            </li>
-          ))}
-        </ul>
-      )}
-    </>
+      <div className="layout">
+        <div className="layout__content">
+          {data && (
+            <table className="border-spacing-3">
+              <thead>
+                <tr>
+                  <th
+                    style={{
+                      textAlign: 'start',
+                    }}
+                  >
+                    Name
+                  </th>
+                  <th
+                    style={{
+                      textAlign: 'start',
+                    }}
+                  >
+                    Birthday date
+                  </th>
+                  <th
+                    style={{
+                      textAlign: 'start',
+                    }}
+                  >
+                    Age
+                  </th>
+                  <th
+                    style={{
+                      textAlign: 'start',
+                    }}
+                  >
+                    Birthday in (days)
+                  </th>
+                  <th
+                    style={{
+                      textAlign: 'start',
+                    }}
+                  ></th>
+                </tr>
+              </thead>
+              <tbody>
+                {data.map((person) => (
+                  <tr
+                    key={person.id}
+                    style={{
+                      height: '32px',
+                    }}
+                  >
+                    <td
+                      style={{
+                        textTransform: 'capitalize',
+                      }}
+                    >
+                      {person.name}
+                    </td>
+                    <td
+                      style={{
+                        textAlign: 'end',
+                      }}
+                    >
+                      {person.birthday}
+                    </td>
+                    <td>
+                      {person.isFull
+                        ? dayjs().diff(dayjs(person.birthday), 'y')
+                        : ''}
+                    </td>
+                    <td>
+                      {(() => {
+                        const now = dayjs();
+                        let birthday = dayjs(
+                          person.birthday,
+                          person.isFull ? 'YYYY-MM-DD' : 'MM-DD',
+                        );
+
+                        const isBirthdayHappened =
+                          birthday.month() > now.month() ||
+                          (birthday.month() === now.month() &&
+                            birthday.day() >= now.day());
+
+                        birthday = birthday.year(
+                          isBirthdayHappened ? now.year() : now.year() + 1,
+                        );
+
+                        return birthday.diff(now, 'd') - 1;
+                      })()}
+                    </td>
+                    <td>
+                      <Link to={person.id}>Explore</Link>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          )}
+        </div>
+
+        <div className="layout__sidebar">
+          <h2>Add new</h2>
+          <AddProfileForm onSubmit={handleSubmitProfileCreation} />
+        </div>
+      </div>
+    </div>
   );
 }
