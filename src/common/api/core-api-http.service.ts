@@ -27,7 +27,7 @@ export class CoreApiHttpService implements ICoreApiHttpService {
       ...options,
       headers: {
         ...options.headers,
-        Accept: `application/json;v=${version}`,
+        'X-Version': version,
       },
     });
   }
@@ -42,7 +42,7 @@ export class CoreApiHttpService implements ICoreApiHttpService {
       ...options,
       headers: {
         ...options.headers,
-        Accept: `application/json;v=${version}`,
+        'X-Version': version,
       },
     });
   }
