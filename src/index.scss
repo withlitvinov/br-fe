@@ -2,34 +2,13 @@
 @tailwind components;
 @tailwind utilities;
 
-input[type='text'] {
-  @apply min-w-0 h-[32px] px-[12px] border border-neutral-100;
-}
+@import url('https://fonts.googleapis.com/css2?family=Inter:slnt,wght@-10..0,100..900&display=swap');
 
-button[type='submit'] {
-  @apply h-[32px] px-[12px];
-}
-
-.page {
-  max-width: 1024px;
-  margin: 0 auto;
-  padding: 0 24px;
-
-  &.root {
-    .layout {
-      container-name: root-content;
-      container-type: inline-size;
-
-      display: flex;
-      column-gap: 16px;
-
-      &__sidebar {
-        width: 320px;
-      }
-
-      &__content {
-        flex: 1;
-      }
-    }
-  }
+body {
+  font-family: 'Inter', sans-serif;
+  font-optical-sizing: auto;
+  font-weight: 400;
+  font-style: normal;
+  font-size: 16px;
+  line-height: 1.2;
 }
