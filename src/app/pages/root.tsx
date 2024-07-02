@@ -5,7 +5,6 @@ dayjs.extend(customFormat);
 
 import { useDi } from '@/common';
 import { ProfilesApi } from '@/profiles';
-import { PageRootContainer } from '@/common/components/PageRootContainer.tsx';
 
 import { PROFILE_LIST } from '../constants';
 
@@ -34,35 +33,29 @@ export function RootPage() {
   });
 
   return (
-    <PageRootContainer>
-      <div className="space-y-[24px]">
-        <div className="text-xl">Welcome back 👋, {'{NAME}'}.</div>
-        <div className="flex flex-col gap-y-[16px]">
-          <div className="text-lg">Upcoming birthdays</div>
-          <div className="flex flex-col gap-y-[8px]">
-            {profiles &&
-              profiles.map((profile) => {
-                const dbirthday = dayjs(
-                  profile.birthday,
-                  getDateFormat(profile.isFull),
-                );
+    <div className="flex flex-col gap-y-[16px]">
+      <div className="text-lg">Upcoming birthdays</div>
+      <div className="flex flex-col gap-y-[8px]">
+        {profiles &&
+          profiles.map((profile) => {
+            const dbirthday = dayjs(
+              profile.birthday,
+              getDateFormat(profile.isFull),
+            );
 
-                return (
-                  <div className="flex min-h-[48px] items-center justify-between gap-x-[16px]">
-                    <div className="flex flex-col gap-y-[4px]">
-                      <span className="capitalize">{profile.name}</span>
-                      <span>{dbirthday.format('DD.MM.YYYY')}</span>
-                    </div>
-                    <div>
-                      In {getDaysLeft(dbirthday)} days (
-                      {dbirthday.format('D MMM')})
-                    </div>
-                  </div>
-                );
-              })}
-          </div>
-        </div>
+            return (
+              <div className="flex min-h-[48px] items-center justify-between gap-x-[16px]">
+                <div className="flex flex-col gap-y-[4px]">
+                  <span className="capitalize">{profile.name}</span>
+                  <span>{dbirthday.format('DD.MM.YYYY')}</span>
+                </div>
+                <div>
+                  In {getDaysLeft(dbirthday)} days ({dbirthday.format('D MMM')})
+                </div>
+              </div>
+            );
+          })}
       </div>
-    </PageRootContainer>
+    </div>
   );
 }

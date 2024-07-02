@@ -1,6 +1,7 @@
-import { useForm } from 'react-hook-form';
+import { Controller, useForm } from 'react-hook-form';
 
 import { BaseFormProps, SubmitStatus } from '@/common';
+import * as Field from '@/common/components/Field';
 
 type FormState = {
   name: string;
@@ -26,7 +27,7 @@ type AddPersonProfileFormProps = BaseFormProps<
 > & {};
 
 export function AddProfileForm({ onSubmit }: AddPersonProfileFormProps) {
-  const { register, handleSubmit, reset } = useForm<FormState>();
+  const { control, handleSubmit, reset } = useForm<FormState>();
 
   const _onSubmit = (state: FormState) => {
     const { name, birthday } = state;
@@ -55,7 +56,15 @@ export function AddProfileForm({ onSubmit }: AddPersonProfileFormProps) {
       }}
     >
       <div style={{ display: 'flex', flexDirection: 'column', rowGap: '4px' }}>
-        <input type="text" placeholder="Name" {...register('name')} />
+        <Controller
+          control={control}
+          name="name"
+          render={({ field: { name, ...field } }) => (
+            <Field.Root name={name}>
+              <Field.Control {...field} type="text" placeholder="Person name" />
+            </Field.Root>
+          )}
+        />
         <div
           style={{
             display: 'flex',
@@ -63,20 +72,44 @@ export function AddProfileForm({ onSubmit }: AddPersonProfileFormProps) {
             columnGap: '4px',
           }}
         >
-          <input
-            type="text"
-            placeholder="Birthday year (Optional)"
-            {...register('birthday.year')}
+          <Controller
+            control={control}
+            name="birthday.year"
+            render={({ field: { name, ...field } }) => (
+              <Field.Root name={name}>
+                <Field.Control
+                  {...field}
+                  type="text"
+                  placeholder="Birthday year (Optional)"
+                />
+              </Field.Root>
+            )}
           />
-          <input
-            type="text"
-            placeholder="Birthday month"
-            {...register('birthday.month')}
+          <Controller
+            control={control}
+            name="birthday.month"
+            render={({ field: { name, ...field } }) => (
+              <Field.Root name={name}>
+                <Field.Control
+                  {...field}
+                  type="text"
+                  placeholder="Birthday month"
+                />
+              </Field.Root>
+            )}
           />
-          <input
-            type="text"
-            placeholder="Birthday day"
-            {...register('birthday.day')}
+          <Controller
+            control={control}
+            name="birthday.day"
+            render={({ field: { name, ...field } }) => (
+              <Field.Root name={name}>
+                <Field.Control
+                  {...field}
+                  type="text"
+                  placeholder="Birthday day"
+                />
+              </Field.Root>
+            )}
           />
         </div>
         <button type="submit">Add</button>
