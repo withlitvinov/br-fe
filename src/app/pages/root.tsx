@@ -19,7 +19,7 @@ const getDaysLeft = (birthday: dayjs.Dayjs) => {
 
   birthday = birthday.year(isBirthdayHappened ? now.year() : now.year() + 1);
 
-  return birthday.diff(now, 'd') - 1;
+  return birthday.diff(now, 'd') + 1;
 };
 
 export function RootPage() {
