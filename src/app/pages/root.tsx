@@ -1,25 +1,47 @@
 import { useQuery } from '@tanstack/react-query';
 import dayjs from 'dayjs';
 import customFormat from 'dayjs/plugin/customParseFormat';
+import utc from 'dayjs/plugin/utc';
 dayjs.extend(customFormat);
+dayjs.extend(utc);
 
 import { useDi } from '@/common';
 import { ProfilesApi } from '@/profiles';
 
 import { PROFILE_LIST } from '../constants';
 
-const getDateFormat = (isFull = false) => (isFull ? 'YYYY-MM-DD' : 'MM-DD');
+// Use when date comes without year
+const LEAP_YEAR = 1600;
+
+const getDateFormat = (isFull: boolean) => (isFull ? 'YYYY-MM-DD' : 'MM-DD');
+
+const getDate = (date: string, isFull: boolean) => {
+  const _result = dayjs(date, getDateFormat(isFull));
+
+  if (isFull) {
+    return _result;
+  }
+
+  return _result.year(LEAP_YEAR);
+};
+
+const isBeforeWithoutYear = (now: dayjs.Dayjs, dateToCheck: dayjs.Dayjs) => {
+  if (now.month() > dateToCheck.month()) {
+    return true;
+  }
+
+  return now.month() === dateToCheck.month() && now.date() > dateToCheck.date();
+};
 
 const getDaysLeft = (birthday: dayjs.Dayjs) => {
   const now = dayjs();
+  let _birthday = birthday.clone();
 
-  const isBirthdayHappened =
-    birthday.month() > now.month() ||
-    (birthday.month() === now.month() && birthday.day() >= now.day());
+  _birthday = _birthday.year(
+    isBeforeWithoutYear(now, _birthday) ? now.year() + 1 : now.year(),
+  );
 
-  birthday = birthday.year(isBirthdayHappened ? now.year() : now.year() + 1);
-
-  return birthday.diff(now, 'd');
+  return _birthday.diff(now, 'd');
 };
 
 export function RootPage() {
@@ -38,21 +60,27 @@ export function RootPage() {
       <div className="flex flex-col gap-y-[8px]">
         {profiles &&
           profiles.map((profile) => {
-            const dbirthday = dayjs(
-              profile.birthday,
-              getDateFormat(profile.isFull),
-            );
+            const dbirthday = getDate(profile.birthday, profile.isFull);
             const daysLeft = getDaysLeft(dbirthday);
 
             return (
-              <div className="flex min-h-[48px] items-center justify-between gap-x-[16px]">
+              <div
+                key={profile.id}
+                className="flex min-h-[48px] items-center justify-between gap-x-[16px]"
+              >
                 <div className="flex flex-col gap-y-[4px]">
                   <span className="capitalize">{profile.name}</span>
-                  <span>{dbirthday.format('DD.MM.YYYY')}</span>
+                  <span>
+                    {dbirthday.format(profile.isFull ? 'DD.MM.YYYY' : 'DD.MM')}
+                  </span>
                 </div>
                 <div>
-                  {daysLeft === 0 ? 'Today' : `In ${daysLeft} days`} (
-                  {dbirthday.format('D MMM')})
+                  {daysLeft === 0 ? (
+                    <span className="font-medium">Today</span>
+                  ) : (
+                    `In ${daysLeft} days`
+                  )}{' '}
+                  ({dbirthday.format('D MMM')})
                 </div>
               </div>
             );
