@@ -19,7 +19,7 @@ const getDaysLeft = (birthday: dayjs.Dayjs) => {
 
   birthday = birthday.year(isBirthdayHappened ? now.year() : now.year() + 1);
 
-  return birthday.diff(now, 'd') + 1;
+  return birthday.diff(now, 'd');
 };
 
 export function RootPage() {
@@ -42,6 +42,7 @@ export function RootPage() {
               profile.birthday,
               getDateFormat(profile.isFull),
             );
+            const daysLeft = getDaysLeft(dbirthday);
 
             return (
               <div className="flex min-h-[48px] items-center justify-between gap-x-[16px]">
@@ -50,7 +51,8 @@ export function RootPage() {
                   <span>{dbirthday.format('DD.MM.YYYY')}</span>
                 </div>
                 <div>
-                  In {getDaysLeft(dbirthday)} days ({dbirthday.format('D MMM')})
+                  {daysLeft === 0 ? 'Today' : `In ${daysLeft} days`} (
+                  {dbirthday.format('D MMM')})
                 </div>
               </div>
             );
