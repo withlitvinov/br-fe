@@ -1,0 +1,19 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`Check constants > DUMMY_LEAP_YEAR 1`] = `1600`;
+
+exports[`Check constants > DateFormatEnum 1`] = `
+{
+  "Full": "YYYY-MM-DD",
+  "WithoutYear": "MM-DD",
+}
+`;
+
+exports[`Check constants > DisplayDateFormatEnum 1`] = `
+{
+  "DayWithShortMonth": "D MMM",
+  "Dot": "DD.MM.YYYY",
+  "DotWithoutYear": "DD.MM",
+  "System": "YYYY-MM-DD",
+}
+`;

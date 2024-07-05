@@ -22,7 +22,7 @@
 
     "experimentalDecorators": true,
     "emitDecoratorMetadata": true,
-    "types": ["reflect-metadata"],
+    "types": ["reflect-metadata", "vitest/globals", "vitest/importMeta"],
 
     "paths": {
       "@/*": ["./src/*"]
