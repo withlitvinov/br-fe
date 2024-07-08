@@ -32,7 +32,7 @@ export class CoreApiHttpService implements ICoreApiHttpService {
     });
   }
 
-  post<T, P>(
+  post<T, P = unknown>(
     path: string,
     payload: P,
     version: EndpointVersion,

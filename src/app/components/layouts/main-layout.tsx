@@ -2,7 +2,7 @@ import { PropsWithChildren } from 'react';
 
 import { PageRootContainer } from '@/common/components';
 
-type MainLayoutProps = PropsWithChildren<{}>;
+type MainLayoutProps = PropsWithChildren;
 
 export const MainLayout = (props: MainLayoutProps) => {
   const { children } = props;

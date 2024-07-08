@@ -11,14 +11,17 @@ export class HttpService implements IHttpService {
 
     const { data } = await axios.get<T>(url, {
       headers,
+      meta: {
+        withAuth: true,
+      },
     });
 
     return data;
   }
 
-  async post<T, P>(
+  async post<T, P = unknown>(
     url: string,
-    payload: P,
+    payload?: P,
     options: HttpServiceOptions = {},
   ): Promise<T> {
     const headers = new AxiosHeaders(options.headers);

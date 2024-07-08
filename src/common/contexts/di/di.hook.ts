@@ -1,15 +1,11 @@
-import { useContext } from 'react';
+import { interfaces } from 'inversify';
 
-import { DiContext } from './di.provider.tsx';
+import useDiContainer from './di-container.hook';
 
-function useDi() {
-  const ctx = useContext(DiContext);
+function useDi<T>(service: interfaces.ServiceIdentifier<T>) {
+  const di = useDiContainer();
 
-  if (!ctx) {
-    throw new Error('useDi must be used within the DiContext');
-  }
-
-  return ctx.container;
+  return di.get(service);
 }
 
 export default useDi;

@@ -1,12 +1,12 @@
 import { useQuery } from '@tanstack/react-query';
 
-import { useDi, dateUtils } from '@/common';
+import { useDiContainer, dateUtils } from '@/common';
 import { ProfilesApi } from '@/profiles';
 
 import { PROFILE_LIST } from '../constants';
 
 export function RootPage() {
-  const container = useDi();
+  const container = useDiContainer();
 
   const { data: profiles } = useQuery({
     queryKey: [PROFILE_LIST],

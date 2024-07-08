@@ -1,15 +1,24 @@
-import { createBrowserRouter, Outlet, RouterProvider } from 'react-router-dom';
+import {
+  createBrowserRouter,
+  Navigate,
+  Outlet,
+  RouterProvider,
+} from 'react-router-dom';
 
-import { RootPage, ExploreProfilePage } from './pages';
-import { MainLayout } from './components/layouts';
+import { RootPage, ExploreProfilePage, LoginPage } from './pages';
+import { AuthLayout, MainLayout } from './components/layouts';
+import { AuthProvider } from '@/auth/auth.context.tsx';
+import { ProtectedRoute } from '@/auth/components/ProtectedRoute.tsx';
 
 const router = createBrowserRouter([
   {
     path: '/',
     element: (
-      <MainLayout>
-        <Outlet />
-      </MainLayout>
+      <ProtectedRoute>
+        <MainLayout>
+          <Outlet />
+        </MainLayout>
+      </ProtectedRoute>
     ),
     children: [
       {
@@ -22,8 +31,30 @@ const router = createBrowserRouter([
       },
     ],
   },
+  {
+    path: '/auth',
+    element: (
+      <AuthLayout>
+        <Outlet />
+      </AuthLayout>
+    ),
+    children: [
+      {
+        index: true,
+        element: <Navigate to="login" />,
+      },
+      {
+        path: 'login',
+        element: <LoginPage />,
+      },
+    ],
+  },
 ]);
 
 export function Application() {
-  return <RouterProvider router={router} />;
+  return (
+    <AuthProvider>
+      <RouterProvider router={router} />
+    </AuthProvider>
+  );
 }
