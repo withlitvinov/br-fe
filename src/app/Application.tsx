@@ -5,10 +5,14 @@ import {
   RouterProvider,
 } from 'react-router-dom';
 
-import { RootPage, ExploreProfilePage, LoginPage } from './pages';
+import { ExploreProfilePage, LoginPage, RootPage } from './pages';
 import { AuthLayout, MainLayout } from './components/layouts';
-import { AuthProvider } from '@/auth/auth.context.tsx';
+import {
+  AuthenticationStatusEnum,
+  AuthProvider,
+} from '@/auth/auth.context.tsx';
 import { ProtectedRoute } from '@/auth/components/ProtectedRoute.tsx';
+import { useAuth } from '@/auth/auth.hook.ts';
 
 const router = createBrowserRouter([
   {
@@ -51,10 +55,20 @@ const router = createBrowserRouter([
   },
 ]);
 
+function ApplicationContent() {
+  const { status } = useAuth();
+
+  if (status === AuthenticationStatusEnum.Loading) {
+    return <>Loading...</>;
+  }
+
+  return <RouterProvider router={router} />;
+}
+
 export function Application() {
   return (
     <AuthProvider>
-      <RouterProvider router={router} />
+      <ApplicationContent />
     </AuthProvider>
   );
 }

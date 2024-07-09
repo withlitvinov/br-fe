@@ -28,6 +28,9 @@ export class ProfilesApi {
       await this.coreApiHttpService.get<GetManyProfilesResponse>(
         this.path,
         EndpointVersion.V1,
+        {
+          withAuth: true,
+        },
       ),
     );
   }
@@ -36,6 +39,9 @@ export class ProfilesApi {
     return this.coreApiHttpService.get<GetByIdProfileResponse>(
       `${this.path}/${id}`,
       EndpointVersion.V1,
+      {
+        withAuth: true,
+      },
     );
   }
 
@@ -52,6 +58,8 @@ export class ProfilesApi {
     return this.coreApiHttpService.post<
       CreateOneProfileResponse,
       CreateOneProfileDto
-    >(this.path, dto, EndpointVersion.V1);
+    >(this.path, dto, EndpointVersion.V1, {
+      withAuth: true,
+    });
   }
 }

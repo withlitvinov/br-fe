@@ -2,6 +2,7 @@ export type HttpServiceOptions = {
   headers?: {
     [key: string]: string;
   };
+  withAuth?: boolean;
 };
 
 export interface IHttpService {
