@@ -1,2 +1,5 @@
-export * as Field from './Field';
+export * from './Button';
+export * from './Input';
+export * from './Label';
+export * from './InputWithLabel';
 export * from './PageRootContainer';

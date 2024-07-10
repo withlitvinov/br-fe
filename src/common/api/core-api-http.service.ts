@@ -8,7 +8,7 @@ import type {
   CoreApiHttpServiceOptions,
 } from './core-api-http.interfaces.ts';
 
-const DEFAULT_BASE_API_URL = 'http://127.0.0.1:4000/api';
+const DEFAULT_BASE_API_URL = 'http://localhost:4000/api';
 
 @injectable()
 export class CoreApiHttpService implements ICoreApiHttpService {
@@ -18,7 +18,7 @@ export class CoreApiHttpService implements ICoreApiHttpService {
     @inject(DiTokens.HttpService) private httpService: IHttpService,
   ) {}
 
-  get<T>(
+  get<T = unknown>(
     path: string,
     version: EndpointVersion,
     options: CoreApiHttpServiceOptions = {},
@@ -32,7 +32,7 @@ export class CoreApiHttpService implements ICoreApiHttpService {
     });
   }
 
-  post<T, P>(
+  post<T = unknown, P = unknown>(
     path: string,
     payload: P,
     version: EndpointVersion,

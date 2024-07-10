@@ -1,14 +1,14 @@
 import { Link, useParams } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
 
-import { useDi } from '@/common';
+import { useDiContainer } from '@/common';
 import { ProfilesApi } from '@/profiles';
 
 import { PROFILE_BY_ID } from '../constants';
 
 function ExploreProfileContent() {
   const { id } = useParams();
-  const container = useDi();
+  const container = useDiContainer();
 
   const isId = !!id;
 
