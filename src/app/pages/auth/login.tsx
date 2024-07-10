@@ -1,6 +1,7 @@
 import { useForm } from 'react-hook-form';
 import { useNavigate } from 'react-router-dom';
 
+import { Button, InputWithLabel } from '@/common/components';
 import { useAuth } from '@/auth/auth.hook';
 
 type FormState = {
@@ -28,15 +29,26 @@ export const LoginPage = () => {
   };
 
   return (
-    <div className="w-full max-w-80">
-      <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-y-2">
-        <input {...register('email')} placeholder="Email" autoComplete="off" />
-        <input
+    <div className="flex items-center size-full p-6 bg-white sm:h-fit sm:max-w-[400px] sm:rounded-md sm:border">
+      <form
+        onSubmit={handleSubmit(onSubmit)}
+        className="flex-1 flex flex-col gap-y-4"
+      >
+        <h1 className="text-lg">Welcome to Birthday Reminder!</h1>
+        <InputWithLabel
+          {...register('email')}
+          placeholder="Email"
+          label="Email"
+          autoComplete="off"
+          type="email"
+        />
+        <InputWithLabel
           {...register('password')}
           placeholder="Password"
-          autoComplete="off"
+          label="Password"
+          type="password"
         />
-        <button type="submit">Login</button>
+        <Button>Login</Button>
       </form>
     </div>
   );

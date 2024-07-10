@@ -21,6 +21,14 @@ export class AuthApi {
     );
   }
 
+  async logout() {
+    await this.coreApiHttpService.post(
+      this.path + '/logout',
+      undefined,
+      EndpointVersion.V1,
+    );
+  }
+
   async refresh() {
     return camelize(
       await this.coreApiHttpService.post<authDtos.RefreshResponseDto>(

@@ -30,9 +30,14 @@ const defaultState: AuthState = {
 type AuthContextValue = {
   status: AuthenticationStatusEnum;
   login: (payload: authContextTypes.LoginPayload) => Promise<boolean>;
+  logout: () => Promise<void>;
 };
 
 export const AuthContext = createContext({} as AuthContextValue);
+
+// TODO: Move to utils
+const interleave = <T = any[], I = any>(array: T[], item: I) =>
+  ([] as (T | I)[]).concat(...array.map((n) => [n, item])).slice(0, -1);
 
 type AuthProviderProps = PropsWithChildren;
 
@@ -85,6 +90,19 @@ export const AuthProvider = (props: AuthProviderProps) => {
     return false;
   };
 
+  const logout = async () => {
+    try {
+      await authApi.logout();
+    } catch (ex) {
+      console.error(ex);
+    }
+
+    setState((prev) => ({
+      ...prev,
+      status: AuthenticationStatusEnum.UnAuthenticated,
+    }));
+  };
+
   useEffect(() => {
     const _ = async () => {
       try {
@@ -125,6 +143,7 @@ export const AuthProvider = (props: AuthProviderProps) => {
       value={{
         status: state.status,
         login,
+        logout,
       }}
     >
       {children}
