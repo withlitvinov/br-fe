@@ -35,10 +35,6 @@ type AuthContextValue = {
 
 export const AuthContext = createContext({} as AuthContextValue);
 
-// TODO: Move to utils
-const interleave = <T = any[], I = any>(array: T[], item: I) =>
-  ([] as (T | I)[]).concat(...array.map((n) => [n, item])).slice(0, -1);
-
 type AuthProviderProps = PropsWithChildren;
 
 export const AuthProvider = (props: AuthProviderProps) => {
