@@ -1,3 +1,4 @@
 export * from './auth';
-export * from './root';
 export * from './explore-profile';
+export * from './new';
+export * from './root';

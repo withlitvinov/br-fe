@@ -17,7 +17,7 @@ export const MainLayout = (props: MainLayoutProps) => {
 
   return (
     <PageRootContainer>
-      <div className="space-y-[24px]">
+      <div className="space-y-[48px]">
         <div className="flex gap-x-2 justify-between">
           <div className="text-xl">Welcome back 👋, {'{NAME}'}.</div>
           <Button
