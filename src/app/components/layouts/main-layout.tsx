@@ -2,13 +2,15 @@ import { PropsWithChildren } from 'react';
 import { LogOut as LogOutIcon } from 'lucide-react';
 
 import { Button, PageRootContainer } from '@/common/components';
-import { useAuth } from '@/auth/auth.hook.ts';
+import { usePageTitle } from '@/common/contexts';
+import { useAuth } from '@/auth/auth.hook';
 
 type MainLayoutProps = PropsWithChildren;
 
 export const MainLayout = (props: MainLayoutProps) => {
   const { children } = props;
 
+  const title = usePageTitle();
   const { logout } = useAuth();
 
   const handleClickLogout = () => {
@@ -19,7 +21,7 @@ export const MainLayout = (props: MainLayoutProps) => {
     <PageRootContainer>
       <div className="space-y-[48px]">
         <div className="flex gap-x-2 justify-between">
-          <div className="text-xl">Welcome back 👋, {'{NAME}'}.</div>
+          <div className="text-xl">{title}</div>
           <Button
             variant="outline"
             size="icon"

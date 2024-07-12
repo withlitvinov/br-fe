@@ -2,7 +2,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import { useForm, Controller } from 'react-hook-form';
 import { useMutation } from '@tanstack/react-query';
 
-import { useDi } from '@/common';
+import { useDi, usePageTitle } from '@/common';
 import { Button, Input, Label } from '@/common/components';
 import { ProfilesApi } from '@/profiles';
 
@@ -20,7 +20,10 @@ type FormState = {
   birthday: string;
 };
 
+const PAGE_TITLE = 'New birthday profile';
+
 export function NewPage() {
+  usePageTitle(PAGE_TITLE);
   const navigate = useNavigate();
   const profilesApi = useDi(ProfilesApi);
   const { control, handleSubmit } = useForm<FormState>({

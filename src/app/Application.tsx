@@ -5,11 +5,13 @@ import {
   RouterProvider,
 } from 'react-router-dom';
 
+import { PageTitleProvider } from '@/common/contexts';
+import { ProtectedRoute } from '@/auth/components';
+import { AuthenticationStatusEnum, AuthProvider } from '@/auth/auth.context';
+import { useAuth } from '@/auth/auth.hook';
+
 import { ExploreProfilePage, LoginPage, RootPage, NewPage } from './pages';
 import { AuthLayout, MainLayout } from './components/layouts';
-import { AuthenticationStatusEnum, AuthProvider } from '@/auth/auth.context';
-import { ProtectedRoute } from '@/auth/components/ProtectedRoute';
-import { useAuth } from '@/auth/auth.hook';
 
 const router = createBrowserRouter([
   {
@@ -73,7 +75,9 @@ function ApplicationContent() {
 export function Application() {
   return (
     <AuthProvider>
-      <ApplicationContent />
+      <PageTitleProvider>
+        <ApplicationContent />
+      </PageTitleProvider>
     </AuthProvider>
   );
 }

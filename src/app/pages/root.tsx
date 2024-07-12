@@ -2,11 +2,15 @@ import { NavLink } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
 
 import { useDiContainer, dateUtils } from '@/common';
+import { usePageTitle } from '@/common/contexts';
 import { ProfilesApi } from '@/profiles';
 
 import { PROFILE_LIST } from '../constants';
 
+const PAGE_TITLE = 'Welcome back 👋, {NAME}.';
+
 export function RootPage() {
+  usePageTitle(PAGE_TITLE);
   const container = useDiContainer();
 
   const { data: profiles } = useQuery({
