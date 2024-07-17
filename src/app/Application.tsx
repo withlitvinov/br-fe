@@ -10,7 +10,7 @@ import { ProtectedRoute } from '@/auth/components';
 import { AuthenticationStatusEnum, AuthProvider } from '@/auth/auth.context';
 import { useAuth } from '@/auth/auth.hook';
 
-import { ExploreProfilePage, LoginPage, RootPage, NewPage } from './pages';
+import { ExplorePage, LoginPage, RootPage, NewPage } from './pages';
 import { AuthLayout, MainLayout } from './components/layouts';
 
 const router = createBrowserRouter([
@@ -34,7 +34,7 @@ const router = createBrowserRouter([
       },
       {
         path: ':id',
-        element: <ExploreProfilePage />,
+        element: <ExplorePage />,
       },
     ],
   },
