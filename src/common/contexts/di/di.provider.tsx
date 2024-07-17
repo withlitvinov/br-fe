@@ -1,5 +1,5 @@
 import { interfaces } from 'inversify';
-import { PropsWithChildren, createContext, useRef } from 'react';
+import { PropsWithChildren, createContext, useMemo } from 'react';
 
 interface DiContextState {
   container: interfaces.Container;
@@ -12,12 +12,15 @@ type DiProviderProps = PropsWithChildren<{
 }>;
 
 function DiProvider(props: DiProviderProps) {
-  const ref = useRef(props.container);
+  const value = useMemo(
+    () => ({
+      container: props.container,
+    }),
+    [props],
+  );
 
   return (
-    <DiContext.Provider value={{ container: ref.current }}>
-      {props.children}
-    </DiContext.Provider>
+    <DiContext.Provider value={value}>{props.children}</DiContext.Provider>
   );
 }
 

@@ -132,7 +132,7 @@ const AuthProvider = (props: AuthProviderProps) => {
     };
 
     _();
-  }, []);
+  }, [authApi]);
 
   return (
     <AuthContext.Provider

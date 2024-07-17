@@ -27,11 +27,11 @@ export function RootPage() {
   useQuery({
     queryKey: [AUTHORIZED_MY_DETAILS_KEY],
     queryFn: async () => {
-      const res = await myApi.getMy();
+      const my = await myApi.getMy();
 
-      updateTitle(getPageTitle(res.name));
+      updateTitle(getPageTitle(my.name));
 
-      return myApi.getMy();
+      return my;
     },
   });
   const { data: profiles } = useQuery({
