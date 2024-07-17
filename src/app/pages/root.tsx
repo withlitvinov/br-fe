@@ -1,22 +1,43 @@
 import { useQuery } from '@tanstack/react-query';
 import { NavLink } from 'react-router-dom';
 
-import { useDiContainer, usePageTitle } from '@/common/contexts';
+import { useDi, usePageTitle } from '@/common/contexts';
 import { dateUtils } from '@/common/utils';
+import { MyApi } from '@/my';
 import { ProfilesApi } from '@/profiles';
 
-import { PROFILE_LIST } from '../constants';
+import { AUTHORIZED_MY_DETAILS_KEY, BIRTHDAY_PROFILES_KEY } from '../constants';
 
-const PAGE_TITLE = 'Welcome back 👋, {NAME}.';
+const getPageTitle = (name?: string) => {
+  const base = 'Welcome back 👋';
+
+  if (name) {
+    return base + ', ' + name + '.';
+  }
+
+  return base + '.';
+};
 
 export function RootPage() {
-  usePageTitle(PAGE_TITLE);
-  const container = useDiContainer();
+  const { updateTitle } = usePageTitle(getPageTitle());
 
+  const profilesApi = useDi(ProfilesApi);
+  const myApi = useDi(MyApi);
+
+  useQuery({
+    queryKey: [AUTHORIZED_MY_DETAILS_KEY],
+    queryFn: async () => {
+      const res = await myApi.getMy();
+
+      updateTitle(getPageTitle(res.name));
+
+      return myApi.getMy();
+    },
+  });
   const { data: profiles } = useQuery({
-    queryKey: [PROFILE_LIST],
+    queryKey: [BIRTHDAY_PROFILES_KEY],
     queryFn: () => {
-      return container.get(ProfilesApi).getMany();
+      return profilesApi.getMany();
     },
   });
 

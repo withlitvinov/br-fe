@@ -10,7 +10,7 @@ type MainLayoutProps = PropsWithChildren;
 export const MainLayout = (props: MainLayoutProps) => {
   const { children } = props;
 
-  const title = usePageTitle();
+  const { title } = usePageTitle();
   const { logout } = useAuth();
 
   const handleClickLogout = () => {

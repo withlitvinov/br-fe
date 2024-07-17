@@ -11,7 +11,10 @@ const usePageTitle = (title?: string | null) => {
     }
   }, [context.updateTitle, title]);
 
-  return context.title;
+  return {
+    title: context.title,
+    updateTitle: context.updateTitle,
+  };
 };
 
 export { usePageTitle };
