@@ -1,7 +1,7 @@
 import { Link, useParams } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
 
-import { useDiContainer } from '@/common';
+import { useDiContainer } from '@/common/contexts';
 import { ProfilesApi } from '@/profiles';
 
 import { PROFILE_BY_ID } from '../constants';

@@ -7,7 +7,8 @@ import { Container } from 'inversify';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 
 import { type IHttpService, HttpService, DiTokens } from '@/core';
-import { CoreApiHttpService, DiProvider } from '@/common';
+import { CoreApiHttpService } from '@/common/api';
+import { DiProvider } from '@/common/contexts';
 
 // Features
 import { AuthApi } from '@/auth';

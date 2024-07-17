@@ -1,8 +1,8 @@
 import { NavLink } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
 
-import { useDiContainer, dateUtils } from '@/common';
-import { usePageTitle } from '@/common/contexts';
+import { usePageTitle, useDiContainer } from '@/common/contexts';
+import { dateUtils } from '@/common/utils';
 import { ProfilesApi } from '@/profiles';
 
 import { PROFILE_LIST } from '../constants';

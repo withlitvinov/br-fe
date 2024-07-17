@@ -1,9 +1,11 @@
 import { Link, useNavigate } from 'react-router-dom';
 import { useForm, Controller } from 'react-hook-form';
 import { useMutation } from '@tanstack/react-query';
+import { z } from 'zod';
+import { zodResolver } from '@hookform/resolvers/zod';
 
-import { useDi, usePageTitle } from '@/common';
 import { Button, Input, Label } from '@/common/components';
+import { useDi, usePageTitle } from '@/common/contexts';
 import { ProfilesApi } from '@/profiles';
 
 type CreateProfilePayload = {
@@ -15,10 +17,15 @@ type CreateProfilePayload = {
   };
 };
 
-type FormState = {
-  name: string;
-  birthday: string;
-};
+const DATE_REGEX = /(\d{4}|####)-(0?[1-9]|1[012])-(0?[1-9]|[12][0-9]|3[01])$/; // Format like: ####-01-01 or 2000-01-01
+
+const schema = z.object({
+  name: z.string().min(1, { message: 'Should contain at least 1 character' }),
+  birthday: z.string().regex(DATE_REGEX, {
+    message: 'Should match pattern "yyyy-mm-dd"',
+  }),
+});
+type FormState = z.infer<typeof schema>;
 
 const PAGE_TITLE = 'New birthday profile';
 
@@ -31,6 +38,7 @@ export function NewPage() {
       name: '',
       birthday: '',
     },
+    resolver: zodResolver(schema),
   });
 
   const { mutate, isPending } = useMutation({
@@ -68,20 +76,25 @@ export function NewPage() {
         <Controller
           control={control}
           name="name"
-          render={({ field }) => (
+          render={({ field, fieldState }) => (
             <div className="w-full grid gap-y-1.5">
               <Label htmlFor={field.name}>Name</Label>
               <Input
                 {...field}
                 placeholder="Birthday owner's name or nickname"
               />
+              {fieldState.error && fieldState.error.message && (
+                <div className="text-sm text-red-500">
+                  {fieldState.error.message}
+                </div>
+              )}
             </div>
           )}
         />
         <Controller
           control={control}
           name="birthday"
-          render={({ field }) => (
+          render={({ field, fieldState }) => (
             <div className="w-full grid gap-y-1.5">
               <div className="flex flex-col gap-y-1">
                 <Label htmlFor={field.name}>Birthday</Label>
@@ -92,6 +105,11 @@ export function NewPage() {
                 </div>
               </div>
               <Input {...field} placeholder="yyyy-mm-dd" />
+              {fieldState.error && fieldState.error.message && (
+                <div className="text-sm text-red-500">
+                  {fieldState.error.message}
+                </div>
+              )}
             </div>
           )}
         />
