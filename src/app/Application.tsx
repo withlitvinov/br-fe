@@ -5,14 +5,13 @@ import {
   RouterProvider,
 } from 'react-router-dom';
 
-import { ExploreProfilePage, LoginPage, RootPage } from './pages';
+import { PageTitleProvider } from '@/common/contexts';
+import { ProtectedRoute } from '@/auth/components';
+import { AuthenticationStatusEnum, AuthProvider } from '@/auth/auth.context';
+import { useAuth } from '@/auth/auth.hook';
+
+import { ExplorePage, LoginPage, RootPage, NewPage } from './pages';
 import { AuthLayout, MainLayout } from './components/layouts';
-import {
-  AuthenticationStatusEnum,
-  AuthProvider,
-} from '@/auth/auth.context.tsx';
-import { ProtectedRoute } from '@/auth/components/ProtectedRoute.tsx';
-import { useAuth } from '@/auth/auth.hook.ts';
 
 const router = createBrowserRouter([
   {
@@ -30,8 +29,12 @@ const router = createBrowserRouter([
         element: <RootPage />,
       },
       {
+        path: 'new',
+        element: <NewPage />,
+      },
+      {
         path: ':id',
-        element: <ExploreProfilePage />,
+        element: <ExplorePage />,
       },
     ],
   },
@@ -72,7 +75,9 @@ function ApplicationContent() {
 export function Application() {
   return (
     <AuthProvider>
-      <ApplicationContent />
+      <PageTitleProvider>
+        <ApplicationContent />
+      </PageTitleProvider>
     </AuthProvider>
   );
 }

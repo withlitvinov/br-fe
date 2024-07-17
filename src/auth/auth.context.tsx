@@ -1,7 +1,7 @@
 import { createContext, useState, PropsWithChildren, useEffect } from 'react';
 import axios, { AxiosError } from 'axios';
 
-import { useDi } from '@/common';
+import { useDi } from '@/common/contexts';
 
 import { AuthApi } from './api';
 import * as authContextTypes from './auth.context.types';
