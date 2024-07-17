@@ -1,21 +1,28 @@
-export type RegisterRequestDto = {
+type RegisterRequestDto = {
   name: string;
   email: string;
   password: string;
   birthday: string;
 };
 
-export type LoginRequestDto = {
+type LoginRequestDto = {
   email: string;
   password: string;
 };
 
-export type LoginResponseDto = {
+type LoginResponseDto = {
   access_token: string;
   expires_in: number;
 };
 
-export type RefreshResponseDto = {
+type RefreshResponseDto = {
   access_token: string;
   expires_in: number;
+};
+
+export type {
+  RegisterRequestDto,
+  LoginRequestDto,
+  LoginResponseDto,
+  RefreshResponseDto,
 };

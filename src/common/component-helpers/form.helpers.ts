@@ -1,10 +1,13 @@
-export enum SubmitStatus {
+enum SubmitStatus {
   Ok,
   Fail,
 }
 
-export type PostSubmitFn = (submitStatus: SubmitStatus) => void;
+type PostSubmitFn = (submitStatus: SubmitStatus) => void;
 
-export type BaseFormProps<FormState, SubmitPayload = FormState> = {
+type BaseFormProps<FormState, SubmitPayload = FormState> = {
   onSubmit: (payload: SubmitPayload, postSubmitFn: PostSubmitFn) => void;
 };
+
+export type { PostSubmitFn, BaseFormProps };
+export { SubmitStatus };

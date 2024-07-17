@@ -1,9 +1,9 @@
 // Test targets
 import {
-  DateFormatEnum,
-  daysBeforeWithoutYear,
-  DisplayDateFormatEnum,
   DUMMY_LEAP_YEAR,
+  DateFormatEnum,
+  DisplayDateFormatEnum,
+  daysBeforeWithoutYear,
   getFormat,
   getWithFormat,
   isBeforeWithoutYear,

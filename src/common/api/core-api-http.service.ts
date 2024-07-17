@@ -3,9 +3,10 @@ import { inject, injectable } from 'inversify';
 import { DiTokens, type IHttpService } from '@/core';
 
 import { EndpointVersion } from '../constants';
-import type {
-  ICoreApiHttpService,
-  CoreApiHttpServiceOptions,
+
+import {
+  type CoreApiHttpServiceOptions,
+  type ICoreApiHttpService,
 } from './core-api-http.interfaces.ts';
 
 const DEFAULT_BASE_API_URL = 'http://localhost:4000/api';

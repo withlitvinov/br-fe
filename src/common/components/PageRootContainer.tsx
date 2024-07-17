@@ -1,6 +1,6 @@
 import { PropsWithChildren } from 'react';
 
-type PageRootContainerProps = PropsWithChildren<{}>;
+type PageRootContainerProps = PropsWithChildren;
 
 export const PageRootContainer = (props: PageRootContainerProps) => {
   const { children } = props;

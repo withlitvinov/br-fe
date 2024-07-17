@@ -8,6 +8,7 @@ function useDiContainer() {
   if (!ctx) {
     throw new Error('useDi must be used within the DiContext');
   }
+
   return ctx.container;
 }
 
