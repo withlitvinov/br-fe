@@ -4,7 +4,7 @@ import { Link, useParams } from 'react-router-dom';
 import { useDiContainer } from '@/common/contexts';
 import { ProfilesApi } from '@/profiles';
 
-import { PROFILE_BY_ID } from '../constants';
+import { BIRTHDAY_PROFILE_BY_ID_KEY } from '../constants';
 
 function ExploreContent() {
   const { id } = useParams();
@@ -13,7 +13,7 @@ function ExploreContent() {
   const isId = !!id;
 
   const { data } = useQuery({
-    queryKey: [PROFILE_BY_ID, id],
+    queryKey: [BIRTHDAY_PROFILE_BY_ID_KEY, id],
     queryFn: () => container.get(ProfilesApi).getById(id!),
     enabled: isId,
   });
