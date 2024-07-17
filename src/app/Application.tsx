@@ -1,17 +1,17 @@
 import {
-  createBrowserRouter,
   Navigate,
   Outlet,
   RouterProvider,
+  createBrowserRouter,
 } from 'react-router-dom';
 
-import { PageTitleProvider } from '@/common/contexts';
-import { ProtectedRoute } from '@/auth/components';
-import { AuthenticationStatusEnum, AuthProvider } from '@/auth/auth.context';
+import { AuthProvider, AuthenticationStatusEnum } from '@/auth/auth.context';
 import { useAuth } from '@/auth/auth.hook';
+import { ProtectedRoute } from '@/auth/components';
+import { PageTitleProvider } from '@/common/contexts';
 
-import { ExplorePage, LoginPage, RootPage, NewPage } from './pages';
 import { AuthLayout, MainLayout } from './components/layouts';
+import { ExplorePage, LoginPage, NewPage, RootPage } from './pages';
 
 const router = createBrowserRouter([
   {

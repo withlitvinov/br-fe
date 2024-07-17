@@ -8,11 +8,11 @@ import {
   camelize,
 } from '@/common';
 
-import type {
-  CreateOneProfileDto,
-  CreateOneProfileResponse,
-  GetByIdProfileResponse,
-  GetManyProfilesResponse,
+import {
+  type CreateOneProfileDto,
+  type CreateOneProfileResponse,
+  type GetByIdProfileResponse,
+  type GetManyProfilesResponse,
 } from './dtos';
 
 @injectable()

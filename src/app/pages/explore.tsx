@@ -1,5 +1,5 @@
-import { Link, useParams } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
+import { Link, useParams } from 'react-router-dom';
 
 import { useDiContainer } from '@/common/contexts';
 import { ProfilesApi } from '@/profiles';

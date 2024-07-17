@@ -1,8 +1,8 @@
 import { useForm } from 'react-hook-form';
 import { useNavigate } from 'react-router-dom';
 
-import { Button, InputWithLabel } from '@/common/components';
 import { useAuth } from '@/auth/auth.hook';
+import { Button, InputWithLabel } from '@/common/components';
 
 type FormState = {
   email: string;

@@ -1,9 +1,9 @@
-import { PropsWithChildren } from 'react';
 import { LogOut as LogOutIcon } from 'lucide-react';
+import { PropsWithChildren } from 'react';
 
+import { useAuth } from '@/auth/auth.hook';
 import { Button, PageRootContainer } from '@/common/components';
 import { usePageTitle } from '@/common/contexts';
-import { useAuth } from '@/auth/auth.hook';
 
 type MainLayoutProps = PropsWithChildren;
 

@@ -1,4 +1,4 @@
-import React, { ComponentProps, ComponentRef } from 'react';
+import { ComponentProps, ComponentRef, forwardRef } from 'react';
 
 import { Input, Label } from '.';
 
@@ -6,7 +6,7 @@ type InputWithLabelProps = ComponentProps<typeof Input> & {
   label?: string;
 };
 
-export const InputWithLabel = React.forwardRef<
+export const InputWithLabel = forwardRef<
   ComponentRef<typeof Input>,
   InputWithLabelProps
 >((props, ref) => {

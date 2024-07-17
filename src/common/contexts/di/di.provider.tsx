@@ -1,5 +1,5 @@
-import { createContext, PropsWithChildren, useRef } from 'react';
 import { interfaces } from 'inversify';
+import { PropsWithChildren, createContext, useRef } from 'react';
 
 interface DiContextState {
   container: interfaces.Container;

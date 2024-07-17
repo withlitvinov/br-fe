@@ -1,10 +1,9 @@
+import { EndpointVersion } from '@/common';
 import { HttpServiceOptions } from '@/core/http';
 
-import { EndpointVersion } from '../constants';
+type CoreApiHttpServiceOptions = HttpServiceOptions;
 
-export type CoreApiHttpServiceOptions = HttpServiceOptions & {};
-
-export interface ICoreApiHttpService {
+interface ICoreApiHttpService {
   get<T>(
     path: string,
     version: EndpointVersion,
@@ -18,3 +17,5 @@ export interface ICoreApiHttpService {
     options?: CoreApiHttpServiceOptions,
   ): Promise<T>;
 }
+
+export type { CoreApiHttpServiceOptions, ICoreApiHttpService };

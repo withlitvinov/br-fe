@@ -1,6 +1,6 @@
 import { useContext, useEffect } from 'react';
 
-import { PageTitleContext } from './page-title.context';
+import { PageTitleContext } from '@/common/contexts';
 
 const usePageTitle = (title?: string | null) => {
   const context = useContext(PageTitleContext);
@@ -9,7 +9,7 @@ const usePageTitle = (title?: string | null) => {
     if (title !== undefined) {
       context.updateTitle(title);
     }
-  }, [context.updateTitle]);
+  }, [context.updateTitle, title]);
 
   return context.title;
 };

@@ -1,2 +1,5 @@
-export const PROFILE_LIST = 'PROFILE_LIST';
-export const PROFILE_BY_ID = 'PROFILE_BY_ID';
+const PROFILE_LIST = 'PROFILE_LIST';
+
+const PROFILE_BY_ID = 'PROFILE_BY_ID';
+
+export { PROFILE_LIST, PROFILE_BY_ID };

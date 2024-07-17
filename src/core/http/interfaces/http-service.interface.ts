@@ -1,11 +1,13 @@
-export type HttpServiceOptions = {
+type HttpServiceOptions = {
   headers?: {
     [key: string]: string;
   };
   withAuth?: boolean;
 };
 
-export interface IHttpService {
+interface IHttpService {
   get<T>(url: string, options?: HttpServiceOptions): Promise<T>;
   post<T, P>(url: string, payload: P, options?: HttpServiceOptions): Promise<T>;
 }
+
+export type { HttpServiceOptions, IHttpService };

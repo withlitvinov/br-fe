@@ -1,5 +1,5 @@
-import { createContext, useState, PropsWithChildren, useEffect } from 'react';
 import axios, { AxiosError } from 'axios';
+import { PropsWithChildren, createContext, useEffect, useState } from 'react';
 
 import { useDi } from '@/common/contexts';
 
@@ -11,7 +11,7 @@ type Credentials = {
   expiresIn: number;
 };
 
-export enum AuthenticationStatusEnum {
+enum AuthenticationStatusEnum {
   Loading = 0,
   Authenticated = 1,
   UnAuthenticated = 2,
@@ -33,11 +33,11 @@ type AuthContextValue = {
   logout: () => Promise<void>;
 };
 
-export const AuthContext = createContext({} as AuthContextValue);
+const AuthContext = createContext({} as AuthContextValue);
 
 type AuthProviderProps = PropsWithChildren;
 
-export const AuthProvider = (props: AuthProviderProps) => {
+const AuthProvider = (props: AuthProviderProps) => {
   const { children } = props;
 
   const authApi = useDi(AuthApi);
@@ -146,3 +146,5 @@ export const AuthProvider = (props: AuthProviderProps) => {
     </AuthContext.Provider>
   );
 };
+
+export { AuthenticationStatusEnum, AuthContext, AuthProvider };

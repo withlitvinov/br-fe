@@ -1,17 +1,15 @@
 import 'reflect-metadata';
 import './index.scss';
 
-import React from 'react';
-import ReactDOM from 'react-dom/client';
-import { Container } from 'inversify';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import { Container } from 'inversify';
+import * as React from 'react';
+import * as ReactDOM from 'react-dom/client';
 
-import { type IHttpService, HttpService, DiTokens } from '@/core';
+import { AuthApi } from '@/auth';
 import { CoreApiHttpService } from '@/common/api';
 import { DiProvider } from '@/common/contexts';
-
-// Features
-import { AuthApi } from '@/auth';
+import { DiTokens, HttpService, type IHttpService } from '@/core';
 import { ProfilesApi } from '@/profiles';
 
 import { Application } from './app';
