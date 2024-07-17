@@ -1,4 +1,10 @@
-import { createContext, PropsWithChildren, useState } from 'react';
+import {
+  createContext,
+  PropsWithChildren,
+  useCallback,
+  useMemo,
+  useState,
+} from 'react';
 
 type PageTitleContextValue = {
   title: string | null;
@@ -22,20 +28,26 @@ const PageTitleProvider = (props: PageTitleProviderProps) => {
 
   const [state, setState] = useState(defaultState);
 
-  const updateTitle = (title: string | null) => {
-    setState((prev) => ({
-      ...prev,
-      title,
-    }));
-  };
+  const updateTitle = useCallback(
+    (title: string | null) => {
+      setState((prev) => ({
+        ...prev,
+        title,
+      }));
+    },
+    [setState],
+  );
+
+  const value = useMemo(
+    () => ({
+      title: state.title,
+      updateTitle,
+    }),
+    [state, updateTitle],
+  );
 
   return (
-    <PageTitleContext.Provider
-      value={{
-        title: state.title,
-        updateTitle,
-      }}
-    >
+    <PageTitleContext.Provider value={value}>
       {children}
     </PageTitleContext.Provider>
   );
