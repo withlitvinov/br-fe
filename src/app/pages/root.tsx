@@ -8,6 +8,18 @@ import { ProfilesApi } from '@/profiles';
 
 import { AUTHORIZED_MY_DETAILS_KEY, BIRTHDAY_PROFILES_KEY } from '../constants';
 
+const getDaysLeftLabel = (daysLeft: number) => {
+  if (daysLeft === 0) {
+    return <span className="font-medium">Today</span>;
+  }
+
+  if (daysLeft === 1) {
+    return 'Tomorrow';
+  }
+
+  return `In ${daysLeft} days`;
+};
+
 const getPageTitle = (name?: string) => {
   const base = 'Welcome back 👋';
 
@@ -60,7 +72,6 @@ export function RootPage() {
               dateUtils.getFormat(profile.isFull),
             );
             const daysLeft = dateUtils.daysBeforeWithoutYear(dbirthday);
-            const isBirthdayToday = daysLeft === 0;
 
             return (
               <div
@@ -78,12 +89,7 @@ export function RootPage() {
                   </span>
                 </div>
                 <div>
-                  {isBirthdayToday ? (
-                    <span className="font-medium">Today</span>
-                  ) : (
-                    `In ${daysLeft} days`
-                  )}{' '}
-                  (
+                  {getDaysLeftLabel(daysLeft)} (
                   {dbirthday.format(
                     dateUtils.DisplayDateFormatEnum.DayWithShortMonth,
                   )}
