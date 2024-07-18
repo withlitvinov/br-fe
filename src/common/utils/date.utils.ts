@@ -1,7 +1,9 @@
 import dayjs from 'dayjs';
 import customFormat from 'dayjs/plugin/customParseFormat';
+import utc from 'dayjs/plugin/utc';
 
 dayjs.extend(customFormat);
+dayjs.extend(utc);
 
 /**
  * Use when date comes without year
@@ -23,11 +25,34 @@ enum DisplayDateFormatEnum {
   DayWithShortMonth = 'D MMM',
 }
 
-const getFormat = (isDateFull: boolean): DateFormatEnum =>
-  isDateFull ? DateFormatEnum.Full : DateFormatEnum.WithoutYear;
+/**
+ * Returns local date without timezone
+ */
+const getLocalWithoutTz = () => {
+  return dayjs().utc(true);
+};
 
-const getWithFormat = (date: string, format: DateFormatEnum): dayjs.Dayjs => {
-  let _date = dayjs(date, format);
+const resetTime = (date: dayjs.Dayjs) => {
+  let _date = date.clone().utc(true);
+
+  _date = _date.hour(0);
+  _date = _date.minute(0);
+  _date = _date.second(0);
+  _date = _date.millisecond(0);
+
+  return _date;
+};
+
+const getFormat = (isDateFull: boolean): DateFormatEnum => {
+  return isDateFull ? DateFormatEnum.Full : DateFormatEnum.WithoutYear;
+};
+
+const getWithFormat = (
+  date: string,
+  format: DateFormatEnum,
+  local = true,
+): dayjs.Dayjs => {
+  let _date = local ? dayjs(date, format).utc(true) : dayjs(date, format);
 
   if (format === DateFormatEnum.WithoutYear) {
     _date = _date.year(DUMMY_LEAP_YEAR);
@@ -46,17 +71,16 @@ const isBeforeWithoutYear = (now: dayjs.Dayjs, dateToCheck: dayjs.Dayjs) => {
 
 const daysBeforeWithoutYear = (
   end: dayjs.Dayjs,
-  start: dayjs.Dayjs = dayjs(),
+  start: dayjs.Dayjs = getLocalWithoutTz(),
 ) => {
-  const now = start.clone();
+  const _start = resetTime(start);
+  let _end = resetTime(end);
 
-  let _date = end.clone();
-
-  _date = _date.year(
-    isBeforeWithoutYear(now, _date) ? now.year() + 1 : now.year(),
+  _end = _end.year(
+    isBeforeWithoutYear(_start, _end) ? _start.year() + 1 : _start.year(),
   );
 
-  return _date.diff(now, 'd');
+  return _end.diff(_start, 'd');
 };
 
 export {
@@ -66,4 +90,5 @@ export {
   getFormat,
   getWithFormat,
   daysBeforeWithoutYear,
+  isBeforeWithoutYear,
 };

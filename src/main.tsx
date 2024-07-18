@@ -3,7 +3,6 @@ import './index.scss';
 
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { Container } from 'inversify';
-import * as React from 'react';
 import * as ReactDOM from 'react-dom/client';
 
 import { AuthApi } from '@/auth';
@@ -27,11 +26,9 @@ rootContainer.bind(MyApi).toSelf();
 const queryClient = new QueryClient();
 
 ReactDOM.createRoot(document.getElementById('root')!).render(
-  <React.StrictMode>
-    <DiProvider container={rootContainer}>
-      <QueryClientProvider client={queryClient}>
-        <Application />
-      </QueryClientProvider>
-    </DiProvider>
-  </React.StrictMode>,
+  <DiProvider container={rootContainer}>
+    <QueryClientProvider client={queryClient}>
+      <Application />
+    </QueryClientProvider>
+  </DiProvider>,
 );
