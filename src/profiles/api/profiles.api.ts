@@ -45,20 +45,16 @@ export class ProfilesApi {
     );
   }
 
-  async createOne(createProfileDto: CreateOneProfileDto) {
-    const dto: CreateOneProfileDto = {
-      name: createProfileDto.name,
-      birthday: {
-        year: createProfileDto.birthday.year,
-        month: createProfileDto.birthday.month,
-        day: createProfileDto.birthday.day,
-      },
+  async createOne(dto: CreateOneProfileDto) {
+    const _dto: CreateOneProfileDto = {
+      name: dto.name,
+      birthday: dto.birthday,
     };
 
     return this.coreApiHttpService.post<
       CreateOneProfileResponse,
       CreateOneProfileDto
-    >(this.path, dto, EndpointVersion.V1, {
+    >(this.path, _dto, EndpointVersion.V1, {
       withAuth: true,
     });
   }

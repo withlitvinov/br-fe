@@ -10,11 +10,7 @@ import { ProfilesApi } from '@/profiles';
 
 type CreateProfilePayload = {
   name: string;
-  birthday: {
-    year: number | null;
-    month: number;
-    day: number;
-  };
+  birthday: string;
 };
 
 const DATE_REGEX = /(\d{4}|####)-(0?[1-9]|1[012])-(0?[1-9]|[12][0-9]|3[01])$/; // Format like: ####-01-01 or 2000-01-01
@@ -48,15 +44,9 @@ export function NewPage() {
   });
 
   const onSubmit = async (state: FormState) => {
-    const [year, month, day] = state.birthday.split('-');
-
     const payload = {
       name: state.name,
-      birthday: {
-        year: year.includes('#') ? null : +year,
-        month: +month,
-        day: +day,
-      },
+      birthday: state.birthday,
     };
 
     mutate(payload, {
