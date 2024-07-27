@@ -9,7 +9,7 @@ import {
   type ICoreApiHttpService,
 } from './core-api-http.interfaces.ts';
 
-const DEFAULT_BASE_API_URL = 'http://localhost:4000/api';
+const DEFAULT_BASE_API_URL = 'http://localhost:2300/api';
 
 @injectable()
 export class CoreApiHttpService implements ICoreApiHttpService {

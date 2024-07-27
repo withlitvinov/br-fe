@@ -1,20 +1,17 @@
 import { zodResolver } from '@hookform/resolvers/zod';
-import { useMutation } from '@tanstack/react-query';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { Controller, useForm } from 'react-hook-form';
 import { Link, useNavigate } from 'react-router-dom';
 import { z } from 'zod';
 
+import { BIRTHDAY_PROFILES_KEY } from '@/app/constants';
 import { Button, Input, Label } from '@/common/components';
 import { useDi, usePageTitle } from '@/common/contexts';
 import { ProfilesApi } from '@/profiles';
 
 type CreateProfilePayload = {
   name: string;
-  birthday: {
-    year: number | null;
-    month: number;
-    day: number;
-  };
+  birthday: string;
 };
 
 const DATE_REGEX = /(\d{4}|####)-(0?[1-9]|1[012])-(0?[1-9]|[12][0-9]|3[01])$/; // Format like: ####-01-01 or 2000-01-01
@@ -33,6 +30,8 @@ export function NewPage() {
   usePageTitle(PAGE_TITLE);
   const navigate = useNavigate();
   const profilesApi = useDi(ProfilesApi);
+  const queryClient = useQueryClient();
+
   const { control, handleSubmit } = useForm<FormState>({
     defaultValues: {
       name: '',
@@ -48,19 +47,16 @@ export function NewPage() {
   });
 
   const onSubmit = async (state: FormState) => {
-    const [year, month, day] = state.birthday.split('-');
-
     const payload = {
       name: state.name,
-      birthday: {
-        year: year.includes('#') ? null : +year,
-        month: +month,
-        day: +day,
-      },
+      birthday: state.birthday,
     };
 
     mutate(payload, {
       onSuccess: () => {
+        queryClient.invalidateQueries({
+          queryKey: [BIRTHDAY_PROFILES_KEY],
+        });
         navigate('/');
       },
     });
