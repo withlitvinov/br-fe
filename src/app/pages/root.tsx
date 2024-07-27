@@ -1,4 +1,5 @@
 import { useQuery } from '@tanstack/react-query';
+import { useEffect } from 'react';
 import { NavLink } from 'react-router-dom';
 
 import { useDi, usePageTitle } from '@/common/contexts';
@@ -36,14 +37,10 @@ export function RootPage() {
   const profilesApi = useDi(ProfilesApi);
   const myApi = useDi(MyApi);
 
-  useQuery({
+  const { data: myDetails } = useQuery({
     queryKey: [AUTHORIZED_MY_DETAILS_KEY],
-    queryFn: async () => {
-      const my = await myApi.getMy();
-
-      updateTitle(getPageTitle(my.name));
-
-      return my;
+    queryFn: () => {
+      return myApi.getMy();
     },
   });
   const { data: profiles } = useQuery({
@@ -52,6 +49,12 @@ export function RootPage() {
       return profilesApi.getMany();
     },
   });
+
+  useEffect(() => {
+    if (myDetails) {
+      updateTitle(getPageTitle(myDetails.name));
+    }
+  }, [updateTitle, myDetails]);
 
   return (
     <div className="flex flex-col gap-y-[16px]">
