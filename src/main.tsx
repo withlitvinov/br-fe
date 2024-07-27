@@ -23,7 +23,16 @@ rootContainer.bind(ProfilesApi).toSelf();
 rootContainer.bind(AuthApi).toSelf();
 rootContainer.bind(MyApi).toSelf();
 
-const queryClient = new QueryClient();
+const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      staleTime: 1000 * 60 * 15, // 15 min
+      gcTime: Infinity,
+      refetchOnWindowFocus: false,
+      refetchOnReconnect: true,
+    },
+  },
+});
 
 ReactDOM.createRoot(document.getElementById('root')!).render(
   <DiProvider container={rootContainer}>

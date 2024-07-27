@@ -1,9 +1,10 @@
 import { zodResolver } from '@hookform/resolvers/zod';
-import { useMutation } from '@tanstack/react-query';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { Controller, useForm } from 'react-hook-form';
 import { Link, useNavigate } from 'react-router-dom';
 import { z } from 'zod';
 
+import { BIRTHDAY_PROFILES_KEY } from '@/app/constants';
 import { Button, Input, Label } from '@/common/components';
 import { useDi, usePageTitle } from '@/common/contexts';
 import { ProfilesApi } from '@/profiles';
@@ -29,6 +30,8 @@ export function NewPage() {
   usePageTitle(PAGE_TITLE);
   const navigate = useNavigate();
   const profilesApi = useDi(ProfilesApi);
+  const queryClient = useQueryClient();
+
   const { control, handleSubmit } = useForm<FormState>({
     defaultValues: {
       name: '',
@@ -51,6 +54,9 @@ export function NewPage() {
 
     mutate(payload, {
       onSuccess: () => {
+        queryClient.invalidateQueries({
+          queryKey: [BIRTHDAY_PROFILES_KEY],
+        });
         navigate('/');
       },
     });
