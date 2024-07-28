@@ -1,4 +1,4 @@
-import axios, { AxiosError } from 'axios';
+import axios, { isAxiosError } from 'axios';
 import { PropsWithChildren, createContext, useEffect, useState } from 'react';
 
 import { useDi } from '@/common/contexts';
@@ -75,7 +75,7 @@ const AuthProvider = (props: AuthProviderProps) => {
 
       return true;
     } catch (ex) {
-      console.error(ex);
+      import.meta.env.DEV && console.error(ex);
     }
 
     setState((prev) => ({
@@ -90,7 +90,7 @@ const AuthProvider = (props: AuthProviderProps) => {
     try {
       await authApi.logout();
     } catch (ex) {
-      console.error(ex);
+      import.meta.env.DEV && console.error(ex);
     }
 
     setState((prev) => ({
@@ -119,9 +119,9 @@ const AuthProvider = (props: AuthProviderProps) => {
           credentials,
         }));
       } catch (ex) {
-        if (ex instanceof AxiosError) {
+        if (isAxiosError(ex)) {
           if (ex.response && ex.response.status === 401) {
-            console.log('Login required');
+            import.meta.env.DEV && console.log('Login required');
             setState((prev) => ({
               ...prev,
               status: AuthenticationStatusEnum.UnAuthenticated,

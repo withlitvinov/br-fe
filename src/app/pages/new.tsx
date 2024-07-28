@@ -41,7 +41,7 @@ export function NewPage() {
   });
 
   const { mutate, isPending } = useMutation({
-    mutationFn: async (payload: CreateProfilePayload) => {
+    mutationFn: (payload: CreateProfilePayload) => {
       return profilesApi.createOne(payload);
     },
   });

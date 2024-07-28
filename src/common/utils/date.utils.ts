@@ -23,6 +23,7 @@ enum DisplayDateFormatEnum {
   Dot = 'DD.MM.YYYY',
   DotWithoutYear = 'DD.MM',
   DayWithShortMonth = 'D MMM',
+  DayWithShortMonthAndYear = 'D MMM YYYY',
 }
 
 /**

@@ -35,13 +35,15 @@ export class ProfilesApi {
     );
   }
 
-  async getById(id: Uuid) {
-    return this.coreApiHttpService.get<GetByIdProfileResponse>(
-      `${this.path}/${id}`,
-      EndpointVersion.V1,
-      {
-        withAuth: true,
-      },
+  async getById(id: Uuid): Promise<Camelize<GetByIdProfileResponse>> {
+    return camelize(
+      await this.coreApiHttpService.get<GetByIdProfileResponse>(
+        `${this.path}/${id}`,
+        EndpointVersion.V1,
+        {
+          withAuth: true,
+        },
+      ),
     );
   }
 
