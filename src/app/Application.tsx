@@ -11,7 +11,7 @@ import { ProtectedRoute } from '@/auth/components';
 import { PageTitleProvider } from '@/common/contexts';
 
 import { AuthLayout, MainLayout } from './components/layouts';
-import { ExplorePage, LoginPage, NewPage, RootPage } from './pages';
+import { DetailsPage, LoginPage, NewPage, RootPage } from './pages';
 
 const router = createBrowserRouter([
   {
@@ -34,7 +34,7 @@ const router = createBrowserRouter([
       },
       {
         path: ':id',
-        element: <ExplorePage />,
+        element: <DetailsPage />,
       },
     ],
   },

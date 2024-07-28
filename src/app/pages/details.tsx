@@ -6,7 +6,7 @@ import { ProfilesApi } from '@/profiles';
 
 import { BIRTHDAY_PROFILE_BY_ID_KEY } from '../constants';
 
-function ExploreContent() {
+function DetailsContent() {
   const { id } = useParams();
   const container = useDiContainer();
 
@@ -39,11 +39,11 @@ function ExploreContent() {
   );
 }
 
-export function ExplorePage() {
+export function DetailsPage() {
   return (
     <>
       <Link to="/">Back to home</Link>
-      <ExploreContent />
+      <DetailsContent />
     </>
   );
 }
