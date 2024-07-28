@@ -1,5 +1,6 @@
 import { inject, injectable } from 'inversify';
 
+import config from '@/config.ts';
 import { DiTokens, type IHttpService } from '@/core';
 
 import { EndpointVersion } from '../constants';
@@ -9,11 +10,9 @@ import {
   type ICoreApiHttpService,
 } from './core-api-http.interfaces.ts';
 
-const DEFAULT_BASE_API_URL = 'http://localhost:2300/api';
-
 @injectable()
 export class CoreApiHttpService implements ICoreApiHttpService {
-  private baseUrl = import.meta.env.BASE_API_URL ?? DEFAULT_BASE_API_URL;
+  private baseUrl = config.VITE_API_URL;
 
   constructor(
     @inject(DiTokens.HttpService) private httpService: IHttpService,
