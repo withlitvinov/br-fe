@@ -1,13 +1,16 @@
-import { useQuery } from '@tanstack/react-query';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { isAxiosError } from 'axios';
-import { useEffect } from 'react';
-import { Link, Navigate, useParams } from 'react-router-dom';
+import { Link, Navigate, useNavigate, useParams } from 'react-router-dom';
 
-import { useDiContainer, usePageTitle } from '@/common/contexts';
+import { Button } from '@/common/components';
+import { useDi, usePageTitle } from '@/common/contexts';
 import { dateUtils } from '@/common/utils';
 import { ProfilesApi } from '@/profiles';
 
-import { BIRTHDAY_PROFILE_BY_ID_KEY } from '../constants';
+import {
+  BIRTHDAY_PROFILES_KEY,
+  BIRTHDAY_PROFILE_BY_ID_KEY,
+} from '../constants';
 
 const getFormattedBirthday = (birthday: string, isFull: boolean) => {
   const date = dateUtils.getWithFormat(
@@ -41,11 +44,14 @@ const isNotFound = (error: unknown) => {
 const DEFAULT_TITLE = 'Profile details';
 
 function DetailsContent() {
-  const { updateTitle } = usePageTitle(DEFAULT_TITLE);
   const { id } = useParams();
-  const container = useDiContainer();
+  const navigate = useNavigate();
 
-  const isId = !!id;
+  usePageTitle(DEFAULT_TITLE);
+  const queryClient = useQueryClient();
+  const profilesApi = useDi(ProfilesApi);
+
+  const isEnabled = !!id;
 
   const {
     data: details,
@@ -53,29 +59,62 @@ function DetailsContent() {
     error,
   } = useQuery({
     queryKey: [BIRTHDAY_PROFILE_BY_ID_KEY, id],
-    queryFn: () => container.get(ProfilesApi).getById(id!),
-    enabled: isId,
+    queryFn: () => profilesApi.getById(id!),
+    enabled: isEnabled,
+  });
+  const { mutate: deleteProfile, isPending } = useMutation({
+    mutationFn: (id: string) => {
+      return profilesApi.delete(id);
+    },
   });
 
-  useEffect(() => {
-    if (details) {
-      updateTitle(`"${details.name}" profile details`);
+  const handleDelete = () => {
+    if (!id) {
+      return;
     }
-  }, [updateTitle, details]);
 
-  if (!isId) {
+    deleteProfile(id, {
+      onSuccess: async () => {
+        navigate('/');
+
+        queryClient.invalidateQueries({
+          queryKey: [BIRTHDAY_PROFILES_KEY],
+          exact: true,
+        });
+        queryClient.removeQueries({
+          queryKey: [BIRTHDAY_PROFILE_BY_ID_KEY, id],
+          exact: true,
+        });
+      },
+    });
+  };
+
+  if (!id) {
     return <Navigate to="/" />;
   }
 
   if (!isLoading && isNotFound(error)) {
-    return <>Profile doesn't exist</>;
+    return <>Not found</>;
   }
 
   return (
     details && (
-      <div>
-        <span className="font-medium">Birthday:</span>{' '}
-        {getFormattedBirthday(details.birthday, details.isFull)}
+      <div className="flex flex-col gap-y-[16px]">
+        <div className="flex justify-between gap-x-[16px]">
+          <span className="text-xl font-medium">{details.name}</span>
+          <Button
+            variant="destructiveOutline"
+            size="sm"
+            disabled={isPending}
+            onClick={handleDelete}
+          >
+            Delete
+          </Button>
+        </div>
+        <div>
+          <span className="font-medium">Birthday:</span>{' '}
+          {getFormattedBirthday(details.birthday, details.isFull)}
+        </div>
       </div>
     )
   );

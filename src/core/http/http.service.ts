@@ -36,4 +36,17 @@ export class HttpService implements IHttpService {
 
     return data;
   }
+
+  async delete<T>(url: string, options: HttpServiceOptions = {}): Promise<T> {
+    const headers = new AxiosHeaders(options.headers);
+
+    const { data } = await axios.delete<T>(url, {
+      headers,
+      meta: {
+        withAuth: options.withAuth ?? false,
+      },
+    });
+
+    return data;
+  }
 }

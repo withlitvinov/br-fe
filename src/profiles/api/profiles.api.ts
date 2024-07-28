@@ -55,4 +55,14 @@ export class ProfilesApi {
       withAuth: true,
     });
   }
+
+  async delete(id: string): Promise<void> {
+    return this.coreApiHttpService.delete<void>(
+      this.path + '/' + id,
+      EndpointVersion.V1,
+      {
+        withAuth: true,
+      },
+    );
+  }
 }
