@@ -1,17 +1,14 @@
 import { inject, injectable } from 'inversify';
 
 import config from '@/config.ts';
-import { DiTokens, type IHttpService } from '@/core';
+import { DiTokens, HttpServiceOptions, type IHttpService } from '@/core';
 
 import { EndpointVersion } from '../constants';
 
-import {
-  type CoreApiHttpServiceOptions,
-  type ICoreApiHttpService,
-} from './core-api-http.interfaces.ts';
+type CoreApiHttpServiceOptions = HttpServiceOptions;
 
 @injectable()
-export class CoreApiHttpService implements ICoreApiHttpService {
+export class CoreApiHttpService {
   private baseUrl = config.VITE_API_URL;
 
   constructor(
@@ -39,6 +36,20 @@ export class CoreApiHttpService implements ICoreApiHttpService {
     options: CoreApiHttpServiceOptions = {},
   ): Promise<T> {
     return this.httpService.post<T, P>(this.baseUrl + path, payload, {
+      ...options,
+      headers: {
+        ...options.headers,
+        'X-Version': version,
+      },
+    });
+  }
+
+  delete<T = unknown>(
+    path: string,
+    version: EndpointVersion,
+    options: CoreApiHttpServiceOptions = {},
+  ): Promise<T> {
+    return this.httpService.delete<T>(this.baseUrl + path, {
       ...options,
       headers: {
         ...options.headers,
