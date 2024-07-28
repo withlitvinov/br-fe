@@ -1,6 +1,5 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { isAxiosError } from 'axios';
-import { useEffect } from 'react';
 import { Link, Navigate, useNavigate, useParams } from 'react-router-dom';
 
 import { Button } from '@/common/components';
@@ -48,7 +47,7 @@ function DetailsContent() {
   const { id } = useParams();
   const navigate = useNavigate();
 
-  const { updateTitle } = usePageTitle(DEFAULT_TITLE);
+  usePageTitle(DEFAULT_TITLE);
   const queryClient = useQueryClient();
   const profilesApi = useDi(ProfilesApi);
 
@@ -68,12 +67,6 @@ function DetailsContent() {
       return profilesApi.delete(id);
     },
   });
-
-  useEffect(() => {
-    if (details) {
-      updateTitle(`"${details.name}" profile details`);
-    }
-  }, [updateTitle, details]);
 
   const handleDelete = () => {
     if (!id) {
@@ -106,12 +99,9 @@ function DetailsContent() {
 
   return (
     details && (
-      <div className="flex flex-col gap-y-[32px]">
-        <div>
-          <span className="font-medium">Birthday:</span>{' '}
-          {getFormattedBirthday(details.birthday, details.isFull)}
-        </div>
-        <div>
+      <div className="flex flex-col gap-y-[16px]">
+        <div className="flex justify-between gap-x-[16px]">
+          <span className="text-xl font-medium">{details.name}</span>
           <Button
             variant="destructiveOutline"
             size="sm"
@@ -120,6 +110,10 @@ function DetailsContent() {
           >
             Delete
           </Button>
+        </div>
+        <div>
+          <span className="font-medium">Birthday:</span>{' '}
+          {getFormattedBirthday(details.birthday, details.isFull)}
         </div>
       </div>
     )
