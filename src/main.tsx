@@ -16,6 +16,7 @@ import { Application } from './app';
 
 const rootContainer = new Container();
 
+// TODO: Bind to self
 rootContainer.bind<IHttpService>(DiTokens.HttpService).to(HttpService);
 
 rootContainer.bind(CoreApiHttpService).toSelf();
