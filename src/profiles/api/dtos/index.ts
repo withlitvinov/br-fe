@@ -1,4 +1,2 @@
-export * from './create-one.dto.ts';
-export * from './create-one.response.ts';
-export * from './get-many.response.ts';
-export * from './get-by-id.response.ts';
+export * as request from './request.dto';
+export * as response from './response.dto';
