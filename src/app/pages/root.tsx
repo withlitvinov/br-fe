@@ -1,6 +1,6 @@
 import { useQuery } from '@tanstack/react-query';
 import { useEffect } from 'react';
-import { NavLink } from 'react-router-dom';
+import { Link, NavLink } from 'react-router-dom';
 
 import { useDi, usePageTitle } from '@/common/contexts';
 import { dateUtils } from '@/common/utils';
@@ -77,12 +77,15 @@ export function RootPage() {
             const daysLeft = dateUtils.daysBeforeWithoutYear(dbirthday);
 
             return (
-              <div
+              <Link
                 key={profile.id}
+                to={`/${profile.id}`}
                 className="flex min-h-[48px] items-center justify-between gap-x-[16px]"
               >
                 <div className="flex flex-col gap-y-[4px]">
-                  <span className="capitalize">{profile.name}</span>
+                  <span className="capitalize hover:underline w-fit">
+                    {profile.name}
+                  </span>
                   <span>
                     {dbirthday.format(
                       profile.isFull
@@ -98,7 +101,7 @@ export function RootPage() {
                   )}
                   )
                 </div>
-              </div>
+              </Link>
             );
           })}
       </div>

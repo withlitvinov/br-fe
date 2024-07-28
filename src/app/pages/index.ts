@@ -1,4 +1,4 @@
 export * from './auth';
-export * from './explore';
+export * from './details';
 export * from './new';
 export * from './root';

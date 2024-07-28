@@ -2,6 +2,7 @@ import 'reflect-metadata';
 import './index.scss';
 
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import { isAxiosError } from 'axios';
 import { Container } from 'inversify';
 import * as ReactDOM from 'react-dom/client';
 
@@ -24,6 +25,9 @@ rootContainer.bind(ProfilesApi).toSelf();
 rootContainer.bind(AuthApi).toSelf();
 rootContainer.bind(MyApi).toSelf();
 
+const MAX_RETRIES = 3;
+const HTTP_STATUS_TO_NOT_RETRY = [400, 401, 403, 404];
+
 const queryClient = new QueryClient({
   defaultOptions: {
     queries: {
@@ -31,6 +35,24 @@ const queryClient = new QueryClient({
       gcTime: Infinity,
       refetchOnWindowFocus: false,
       refetchOnReconnect: true,
+      retry: (failureCount, error) => {
+        if (failureCount > MAX_RETRIES) {
+          return false;
+        }
+
+        if (
+          isAxiosError(error) &&
+          HTTP_STATUS_TO_NOT_RETRY.includes(error.response?.status ?? 0)
+        ) {
+          import.meta.env.DEV &&
+            console.log(
+              `Aborting retry due to ${error.response?.status} status`,
+            );
+          return false;
+        }
+
+        return true;
+      },
     },
   },
 });
