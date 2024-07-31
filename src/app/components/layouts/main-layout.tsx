@@ -3,7 +3,7 @@ import dayjs from 'dayjs';
 import tz from 'dayjs/plugin/timezone';
 import utc from 'dayjs/plugin/utc';
 import { LogOut as LogOutIcon, Settings as SettingsIcon } from 'lucide-react';
-import { PropsWithChildren, useEffect } from 'react';
+import { PropsWithChildren } from 'react';
 import { Link } from 'react-router-dom';
 
 dayjs.extend(utc);
@@ -26,8 +26,9 @@ import {
   PageRootContainer,
 } from '@/common/components';
 import { useDi, usePageTitle } from '@/common/contexts';
-import { dateUtils } from '@/common/utils';
 import { MyApi } from '@/my';
+
+import { useConfigureGlobalTz } from '../../hooks';
 
 const getNameInitials = (name: string) => {
   return name.split(' ').map((slice) => slice.charAt(0).toUpperCase());
@@ -95,21 +96,7 @@ export const MainLayout = (props: MainLayoutProps) => {
   const { children } = props;
 
   const { title } = usePageTitle();
-
-  const myApi = useDi(MyApi);
-
-  const { data: my } = useQuery({
-    queryKey: [AUTHORIZED_MY_DETAILS_KEY],
-    queryFn: () => {
-      return myApi.getMy();
-    },
-  });
-
-  useEffect(() => {
-    if (my) {
-      dateUtils.setGlobalTz(my.config.timeZone);
-    }
-  }, [my]);
+  useConfigureGlobalTz();
 
   return (
     <PageRootContainer>
