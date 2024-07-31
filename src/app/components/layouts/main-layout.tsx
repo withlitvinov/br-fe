@@ -32,6 +32,62 @@ const getNameInitials = (name: string) => {
   return name.split(' ').map((slice) => slice.charAt(0).toUpperCase());
 };
 
+const AccountMenu = () => {
+  const { logout } = useAuth();
+  const myApi = useDi(MyApi);
+
+  const { data: my } = useQuery({
+    queryKey: [AUTHORIZED_MY_DETAILS_KEY],
+    queryFn: () => {
+      return myApi.getMy();
+    },
+  });
+
+  const handleClickLogout = () => {
+    logout();
+  };
+
+  return (
+    <DropdownMenu>
+      <DropdownMenuTrigger asChild>
+        <Button variant="ghost" size="fit">
+          <Avatar>
+            <AvatarFallback>{my && getNameInitials(my.name)}</AvatarFallback>
+          </Avatar>
+        </Button>
+      </DropdownMenuTrigger>
+      <DropdownMenuPortal>
+        <DropdownMenuContent className="w-56" align="end">
+          {my && (
+            <DropdownMenuLabel className="flex flex-col">
+              <span>{my.name}</span>
+              <span className="font-normal text-neutral-400">{my.email}</span>
+            </DropdownMenuLabel>
+          )}
+          <DropdownMenuSeparator />
+          <DropdownMenuGroup>
+            <DropdownMenuItem asChild>
+              <Link to="/settings">
+                <SettingsIcon className="mr-2 h-4 w-4" />
+                <span>Settings</span>
+              </Link>
+            </DropdownMenuItem>
+          </DropdownMenuGroup>
+          <DropdownMenuSeparator />
+          <DropdownMenuGroup>
+            <DropdownMenuItem asChild>
+              <button onClick={handleClickLogout}>
+                <LogOutIcon className="mr-2 h-4 w-4" />
+                <span>Log out</span>
+              </button>
+            </DropdownMenuItem>
+          </DropdownMenuGroup>
+        </DropdownMenuContent>
+      </DropdownMenuPortal>
+    </DropdownMenu>
+  );
+};
+
 type MainLayoutProps = PropsWithChildren;
 
 export const MainLayout = (props: MainLayoutProps) => {
@@ -39,7 +95,6 @@ export const MainLayout = (props: MainLayoutProps) => {
 
   const { title } = usePageTitle();
 
-  const { logout } = useAuth();
   const myApi = useDi(MyApi);
 
   const { data: my } = useQuery({
@@ -51,61 +106,22 @@ export const MainLayout = (props: MainLayoutProps) => {
 
   useEffect(() => {
     if (my) {
-      dayjs.tz.setDefault(my.config.timeZone);
-      console.log(dayjs().tz().format());
+      const tz = my.config.timeZone;
+
+      dayjs.tz.setDefault(tz);
+
+      if (import.meta.env.DEV) {
+        console.log(`Applied user's time zone: ${tz}`);
+      }
     }
   }, [my]);
-
-  const handleClickLogout = () => {
-    logout();
-  };
 
   return (
     <PageRootContainer>
       <div className="space-y-[48px]">
         <div className="flex gap-x-2 justify-between">
           <div className="text-xl">{title}</div>
-          <DropdownMenu>
-            <DropdownMenuTrigger asChild>
-              <Button variant="ghost" size="fit">
-                <Avatar>
-                  <AvatarFallback>
-                    {my && getNameInitials(my.name)}
-                  </AvatarFallback>
-                </Avatar>
-              </Button>
-            </DropdownMenuTrigger>
-            <DropdownMenuPortal>
-              <DropdownMenuContent className="w-56" align="end">
-                {my && (
-                  <DropdownMenuLabel className="flex flex-col">
-                    <span>{my.name}</span>
-                    <span className="font-normal text-neutral-400">
-                      {my.email}
-                    </span>
-                  </DropdownMenuLabel>
-                )}
-                <DropdownMenuSeparator />
-                <DropdownMenuGroup>
-                  <DropdownMenuItem asChild>
-                    <Link to="/settings">
-                      <SettingsIcon className="mr-2 h-4 w-4" />
-                      <span>Settings</span>
-                    </Link>
-                  </DropdownMenuItem>
-                </DropdownMenuGroup>
-                <DropdownMenuSeparator />
-                <DropdownMenuGroup>
-                  <DropdownMenuItem asChild>
-                    <button onClick={handleClickLogout}>
-                      <LogOutIcon className="mr-2 h-4 w-4" />
-                      <span>Log out</span>
-                    </button>
-                  </DropdownMenuItem>
-                </DropdownMenuGroup>
-              </DropdownMenuContent>
-            </DropdownMenuPortal>
-          </DropdownMenu>
+          <AccountMenu />
         </div>
         <div>{children}</div>
       </div>
