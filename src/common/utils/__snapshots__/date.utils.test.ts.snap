@@ -12,6 +12,7 @@ exports[`Check constants > DateFormatEnum 1`] = `
 exports[`Check constants > DisplayDateFormatEnum 1`] = `
 {
   "DayWithShortMonth": "D MMM",
+  "DayWithShortMonthAndYear": "D MMM YYYY",
   "Dot": "DD.MM.YYYY",
   "DotWithoutYear": "DD.MM",
   "System": "YYYY-MM-DD",
