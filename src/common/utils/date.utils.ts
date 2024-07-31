@@ -32,7 +32,7 @@ const setGlobalTz = (tz: string) => {
   dayjs.tz.setDefault(tz);
 
   if (import.meta.env.DEV) {
-    console.log(`Applied time zone globally: ${tz}`);
+    console.log(`Global time zone applied: ${tz}`);
   }
 };
 
