@@ -12,6 +12,7 @@ import { DiProvider } from '@/common/contexts';
 import { DiTokens, HttpService, type IHttpService } from '@/core';
 import { MyApi } from '@/my';
 import { ProfilesApi } from '@/profiles';
+import { TzApi } from '@/tz';
 
 import { Application } from './app';
 
@@ -24,6 +25,7 @@ rootContainer.bind(CoreApiHttpService).toSelf();
 rootContainer.bind(ProfilesApi).toSelf();
 rootContainer.bind(AuthApi).toSelf();
 rootContainer.bind(MyApi).toSelf();
+rootContainer.bind(TzApi).toSelf();
 
 const MAX_RETRIES = 3;
 const HTTP_STATUS_TO_NOT_RETRY = [400, 401, 403, 404];

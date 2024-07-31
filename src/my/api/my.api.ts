@@ -7,7 +7,7 @@ import {
   camelize,
 } from '@/common';
 
-import { type MyResponseDto } from './dtos';
+import { type MyResponseDto, request } from './dtos';
 
 @injectable()
 export class MyApi {
@@ -26,6 +26,19 @@ export class MyApi {
           withAuth: true,
         },
       ),
+    );
+  }
+
+  async updateTz(timeZone: string): Promise<void> {
+    return this.coreApiHttpService.patch<void, request.UpdateTimeZoneDto>(
+      this.path + '/time_zone',
+      {
+        time_zone: timeZone,
+      },
+      EndpointVersion.V1,
+      {
+        withAuth: true,
+      },
     );
   }
 }

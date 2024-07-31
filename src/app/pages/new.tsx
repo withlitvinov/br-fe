@@ -1,5 +1,6 @@
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { MoveLeftIcon } from 'lucide-react';
 import { Controller, useForm } from 'react-hook-form';
 import { Link, useNavigate } from 'react-router-dom';
 import { z } from 'zod';
@@ -64,8 +65,11 @@ export function NewPage() {
 
   return (
     <div className="flex flex-col gap-y-6">
-      <Link to="/" className="w-fit hover:text-blue-400">
-        {'<-'} Back
+      <Link
+        to="/"
+        className="inline-flex items-center gap-x-2 w-fit hover:text-blue-400"
+      >
+        <MoveLeftIcon /> Back
       </Link>
       <form className="flex flex-col gap-y-3" onSubmit={handleSubmit(onSubmit)}>
         <Controller

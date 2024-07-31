@@ -37,6 +37,23 @@ export class HttpService implements IHttpService {
     return data;
   }
 
+  async patch<T, P = unknown>(
+    url: string,
+    payload?: P,
+    options: HttpServiceOptions = {},
+  ): Promise<T> {
+    const headers = new AxiosHeaders(options.headers);
+
+    const { data } = await axios.patch<T, AxiosResponse<T>, P>(url, payload, {
+      headers,
+      meta: {
+        withAuth: options.withAuth ?? false,
+      },
+    });
+
+    return data;
+  }
+
   async delete<T>(url: string, options: HttpServiceOptions = {}): Promise<T> {
     const headers = new AxiosHeaders(options.headers);
 
