@@ -26,6 +26,7 @@ import {
   PageRootContainer,
 } from '@/common/components';
 import { useDi, usePageTitle } from '@/common/contexts';
+import { dateUtils } from '@/common/utils';
 import { MyApi } from '@/my';
 
 const getNameInitials = (name: string) => {
@@ -106,13 +107,7 @@ export const MainLayout = (props: MainLayoutProps) => {
 
   useEffect(() => {
     if (my) {
-      const tz = my.config.timeZone;
-
-      dayjs.tz.setDefault(tz);
-
-      if (import.meta.env.DEV) {
-        console.log(`Applied user's time zone: ${tz}`);
-      }
+      dateUtils.setGlobalTz(my.config.timeZone);
     }
   }, [my]);
 
