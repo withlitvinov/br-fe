@@ -142,7 +142,7 @@ const TimeZoneSetting = () => {
           <SelectTrigger>
             <SelectValue placeholder="Loading..." />
           </SelectTrigger>
-          {tzKeys.length && (
+          {!!tzKeys.length && (
             <SelectContent>
               {tzKeys.map((key) => (
                 <SelectItem key={key} value={key}>
@@ -159,7 +159,7 @@ const TimeZoneSetting = () => {
           <SelectTrigger>
             <SelectValue placeholder="Loading..." />
           </SelectTrigger>
-          {tzKeys.length && tz.region && (
+          {!!tzKeys.length && tz.region && (
             <SelectContent>
               {tzMap[tz.region].map((sub) => (
                 <SelectItem key={sub.location} value={sub.location}>
