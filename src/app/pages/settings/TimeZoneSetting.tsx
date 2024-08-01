@@ -41,13 +41,25 @@ const compareStringAsc = (a: string, b: string) => {
   return 0;
 };
 
+type TzState = {
+  region: string | null;
+  location: string | null;
+};
+
+type TzLocation = {
+  location: string;
+  utcOffset: number;
+};
+
 const TimeZoneSetting = () => {
   const queryClient = useQueryClient();
   const myApi = useDi(MyApi);
   const tzApi = useDi(TzApi);
 
-  const [region, setRegion] = useState<string | null>(null);
-  const [location, setLocation] = useState<string | null>(null);
+  const [tz, setTz] = useState<TzState>({
+    region: null,
+    location: null,
+  });
 
   const { data: my, isLoading: isMyLoading } = useQuery({
     queryKey: [AUTHORIZED_MY_DETAILS_KEY],
@@ -68,32 +80,32 @@ const TimeZoneSetting = () => {
   });
 
   const isTimeZoneChanged = useMemo(() => {
-    if (region && location && my) {
-      return region + '/' + location !== my.config.timeZone;
+    if (tz.region && tz.location && my) {
+      return tz.region + '/' + tz.location !== my.config.timeZone;
     }
 
     return false;
-  }, [region, location, my]);
+  }, [tz, my]);
 
-  const tzMap = useMemo(() => {
+  const { tzKeys, tzMap } = useMemo(() => {
+    const tzKeys: string[] = [];
     const tzMap: {
-      [region: string]: {
-        location: string;
-        utcOffset: number;
-      }[];
+      [region: string]: TzLocation[];
     } = {};
 
     if (!tzs) {
-      return tzMap;
+      return { tzKeys, tzMap };
     }
 
+    // Build time zone map
     for (const tz of tzs) {
       const [region, location] = tz.id.split('/');
 
       if (!location) {
-        // Do nothing
+        // Time zone is without location - do nothing
       } else {
         if (!tzMap[region]) {
+          tzKeys.push(region);
           tzMap[region] = [
             {
               location,
@@ -109,44 +121,55 @@ const TimeZoneSetting = () => {
       }
     }
 
-    return tzMap;
+    // Sort region locations
+    for (const tz of tzKeys) {
+      tzMap[tz] = tzMap[tz].sort((a, b) =>
+        compareStringAsc(a.location, b.location),
+      );
+    }
+
+    // Get a time zone list
+    const sortedTzKeys = tzKeys.sort();
+
+    return { tzKeys: sortedTzKeys, tzMap };
   }, [tzs]);
 
   useEffect(() => {
-    const regions = Object.keys(tzMap);
-
-    if (regions.length === 0 || isMyLoading || isTzsLoading) {
+    if (tzKeys.length === 0 || isMyLoading || isTzsLoading) {
       return;
     }
 
     if (my) {
       const [region, location] = my.config.timeZone.split('/');
 
-      setRegion(region);
-      setLocation(location);
+      setTz(() => ({
+        region,
+        location,
+      }));
     } else {
-      setRegion(regions[0]);
-      setLocation(
-        tzMap[regions[0]].sort((a, b) =>
-          compareStringAsc(a.location, b.location),
-        )[0].location,
-      );
+      const headTz = tzKeys[0];
+
+      setTz(() => ({
+        region: headTz,
+        location: tzMap[headTz][0].location,
+      }));
     }
   }, [my, tzMap, isMyLoading, isTzsLoading]);
 
   const handleChangeRegion = (region: string) => {
-    if (Object.keys(tzMap).length) {
-      setRegion(region);
-      setLocation(
-        tzMap[region].sort((a, b) =>
-          compareStringAsc(a.location, b.location),
-        )[0].location,
-      );
+    if (tzKeys.length) {
+      setTz(() => ({
+        region,
+        location: tzMap[region][0].location,
+      }));
     }
   };
 
   const handleChangeLocation = (location: string) => {
-    setLocation(location);
+    setTz((prev) => ({
+      ...prev,
+      location,
+    }));
   };
 
   const handleCancel = () => {
@@ -159,17 +182,19 @@ const TimeZoneSetting = () => {
     if (my) {
       const [region, location] = my.config.timeZone.split('/');
 
-      setRegion(region);
-      setLocation(location);
+      setTz(() => ({
+        region,
+        location,
+      }));
     }
   };
 
   const handleSave = () => {
-    if (isMyLoading || isTzsLoading || !my || !region || !location) {
+    if (isMyLoading || isTzsLoading || !my || !tz.region || !tz.location) {
       return;
     }
 
-    const newTz = region + '/' + location;
+    const newTz = tz.region + '/' + tz.location;
 
     mutate(newTz, {
       onSuccess: () => {
@@ -184,44 +209,44 @@ const TimeZoneSetting = () => {
     <div className="flex flex-col gap-y-2">
       <Label>Local time zone</Label>
       <div className="flex flex-col gap-y-2">
-        <Select value={region ?? undefined} onValueChange={handleChangeRegion}>
+        <Select
+          value={tz.region ?? undefined}
+          onValueChange={handleChangeRegion}
+        >
           <SelectTrigger>
             <SelectValue placeholder="Loading..." />
           </SelectTrigger>
-          <SelectContent>
-            {Object.keys(tzMap).length &&
-              Object.keys(tzMap)
-                .sort()
-                .map((key) => (
-                  <SelectItem key={key} value={key}>
-                    <SelectItemText>{key}</SelectItemText>
-                  </SelectItem>
-                ))}
-          </SelectContent>
+          {tzKeys.length && (
+            <SelectContent>
+              {tzKeys.map((key) => (
+                <SelectItem key={key} value={key}>
+                  <SelectItemText>{key}</SelectItemText>
+                </SelectItem>
+              ))}
+            </SelectContent>
+          )}
         </Select>
         <Select
-          value={location ?? undefined}
+          value={tz.location ?? undefined}
           onValueChange={handleChangeLocation}
         >
           <SelectTrigger>
             <SelectValue placeholder="Loading..." />
           </SelectTrigger>
-          <SelectContent>
-            {region &&
-              Object.keys(tzMap).length &&
-              tzMap[region]
-                .sort((a, b) => compareStringAsc(a.location, b.location))
-                .map((sub) => (
-                  <SelectItem key={sub.location} value={sub.location}>
-                    <div className="w-full flex justify-between">
-                      <SelectItemText>{sub.location}</SelectItemText>
-                      <span className="text-neutral-400">
-                        {formatOffset(sub.utcOffset)}
-                      </span>
-                    </div>
-                  </SelectItem>
-                ))}
-          </SelectContent>
+          {tzKeys.length && tz.region && (
+            <SelectContent>
+              {tzMap[tz.region].map((sub) => (
+                <SelectItem key={sub.location} value={sub.location}>
+                  <div className="w-full flex justify-between">
+                    <SelectItemText>{sub.location}</SelectItemText>
+                    <span className="text-neutral-400">
+                      {formatOffset(sub.utcOffset)}
+                    </span>
+                  </div>
+                </SelectItem>
+              ))}
+            </SelectContent>
+          )}
         </Select>
       </div>
       {isTimeZoneChanged && (

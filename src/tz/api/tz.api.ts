@@ -12,6 +12,8 @@ type TimeZoneDto = {
   utc_offset: number;
 };
 
+type CamelizedTimeZoneDto = Camelize<TimeZoneDto>;
+
 @injectable()
 export class TzApi {
   private path = '/tz';
@@ -32,3 +34,5 @@ export class TzApi {
     );
   }
 }
+
+export type { CamelizedTimeZoneDto };
