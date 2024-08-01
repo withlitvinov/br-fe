@@ -1,12 +1,14 @@
 import dayjs from 'dayjs';
 import customFormat from 'dayjs/plugin/customParseFormat';
+import tz from 'dayjs/plugin/timezone';
 import utc from 'dayjs/plugin/utc';
 
 dayjs.extend(customFormat);
 dayjs.extend(utc);
+dayjs.extend(tz);
 
 /**
- * Use when date comes without year
+ * Use when date comes without a year
  */
 const DUMMY_LEAP_YEAR = 1600;
 
@@ -26,11 +28,19 @@ enum DisplayDateFormatEnum {
   DayWithShortMonthAndYear = 'D MMM YYYY',
 }
 
+const setGlobalTz = (tz: string) => {
+  dayjs.tz.setDefault(tz);
+
+  if (import.meta.env.DEV) {
+    console.log(`Global time zone applied: ${tz}`);
+  }
+};
+
 /**
- * Returns local date without timezone
+ * Returns local date without a timezone
  */
 const getLocalWithoutTz = () => {
-  return dayjs().utc(true);
+  return dayjs().tz().utc(true);
 };
 
 const resetTime = (date: dayjs.Dayjs) => {
@@ -53,7 +63,9 @@ const getWithFormat = (
   format: DateFormatEnum,
   local = true,
 ): dayjs.Dayjs => {
-  let _date = local ? dayjs(date, format).utc(true) : dayjs(date, format);
+  let _date = local
+    ? dayjs(date, format).tz(undefined, true).utc(true)
+    : dayjs(date, format).tz(undefined, true);
 
   if (format === DateFormatEnum.WithoutYear) {
     _date = _date.year(DUMMY_LEAP_YEAR);
@@ -88,6 +100,7 @@ export {
   DUMMY_LEAP_YEAR,
   DateFormatEnum,
   DisplayDateFormatEnum,
+  setGlobalTz,
   getFormat,
   getWithFormat,
   daysBeforeWithoutYear,

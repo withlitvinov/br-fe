@@ -8,6 +8,11 @@ type HttpServiceOptions = {
 interface IHttpService {
   get<T>(url: string, options?: HttpServiceOptions): Promise<T>;
   post<T, P>(url: string, payload: P, options?: HttpServiceOptions): Promise<T>;
+  patch<T, P>(
+    url: string,
+    payload: P,
+    options?: HttpServiceOptions,
+  ): Promise<T>;
   delete<T>(url: string, options?: HttpServiceOptions): Promise<T>;
 }
 

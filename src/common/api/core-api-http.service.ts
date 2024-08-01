@@ -44,6 +44,21 @@ export class CoreApiHttpService {
     });
   }
 
+  patch<T = unknown, P = unknown>(
+    path: string,
+    payload: P,
+    version: EndpointVersion,
+    options: CoreApiHttpServiceOptions = {},
+  ): Promise<T> {
+    return this.httpService.patch<T, P>(this.baseUrl + path, payload, {
+      ...options,
+      headers: {
+        ...options.headers,
+        'X-Version': version,
+      },
+    });
+  }
+
   delete<T = unknown>(
     path: string,
     version: EndpointVersion,

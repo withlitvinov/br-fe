@@ -1,5 +1,6 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { isAxiosError } from 'axios';
+import { MoveLeftIcon } from 'lucide-react';
 import { Link, Navigate, useNavigate, useParams } from 'react-router-dom';
 
 import { Button } from '@/common/components';
@@ -123,8 +124,11 @@ function DetailsContent() {
 export function DetailsPage() {
   return (
     <div className="flex flex-col gap-y-6">
-      <Link to="/" className="w-fit hover:text-blue-400">
-        {'<-'} Back to home page
+      <Link
+        to="/"
+        className="inline-flex items-center gap-x-2 w-fit hover:text-blue-400"
+      >
+        <MoveLeftIcon /> Back to home page
       </Link>
       <DetailsContent />
     </div>
