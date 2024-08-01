@@ -13,42 +13,13 @@ import {
 } from '@/common/components';
 import { useDi } from '@/common/contexts';
 import { MyApi } from '@/my';
-import { TzApi } from '@/tz';
+import { TzApi, buildTzMap, getFormattedTzOffset } from '@/tz';
 
 import { AUTHORIZED_MY_DETAILS_KEY, TIME_ZONES_KEY } from '../../constants';
-
-const formatOffset = (offset: number) => {
-  const sign = offset >= 0 ? '+' : '-';
-  const absSeconds = Math.abs(offset);
-  const hours = Math.floor(absSeconds / 3600);
-  const minutes = Math.floor((absSeconds % 3600) / 60);
-
-  const formattedHours = String(hours).padStart(2, '0');
-  const formattedMinutes = String(minutes).padStart(2, '0');
-
-  return `${sign}${formattedHours}:${formattedMinutes}`;
-};
-
-const compareStringAsc = (a: string, b: string) => {
-  if (a < b) {
-    return -1;
-  }
-
-  if (a > b) {
-    return 1;
-  }
-
-  return 0;
-};
 
 type TzState = {
   region: string | null;
   location: string | null;
-};
-
-type TzLocation = {
-  location: string;
-  utcOffset: number;
 };
 
 const TimeZoneSetting = () => {
@@ -87,52 +58,7 @@ const TimeZoneSetting = () => {
     return false;
   }, [tz, my]);
 
-  const { tzKeys, tzMap } = useMemo(() => {
-    const tzKeys: string[] = [];
-    const tzMap: {
-      [region: string]: TzLocation[];
-    } = {};
-
-    if (!tzs) {
-      return { tzKeys, tzMap };
-    }
-
-    // Build time zone map
-    for (const tz of tzs) {
-      const [region, location] = tz.id.split('/');
-
-      if (!location) {
-        // Time zone is without location - do nothing
-      } else {
-        if (!tzMap[region]) {
-          tzKeys.push(region);
-          tzMap[region] = [
-            {
-              location,
-              utcOffset: tz.utcOffset,
-            },
-          ];
-        } else {
-          tzMap[region].push({
-            location,
-            utcOffset: tz.utcOffset,
-          });
-        }
-      }
-    }
-
-    // Sort region locations
-    for (const tz of tzKeys) {
-      tzMap[tz] = tzMap[tz].sort((a, b) =>
-        compareStringAsc(a.location, b.location),
-      );
-    }
-
-    // Get a time zone list
-    const sortedTzKeys = tzKeys.sort();
-
-    return { tzKeys: sortedTzKeys, tzMap };
-  }, [tzs]);
+  const { tzKeys, tzMap } = useMemo(() => buildTzMap(tzs ? tzs : []), [tzs]);
 
   useEffect(() => {
     if (tzKeys.length === 0 || isMyLoading || isTzsLoading) {
@@ -240,7 +166,7 @@ const TimeZoneSetting = () => {
                   <div className="w-full flex justify-between">
                     <SelectItemText>{sub.location}</SelectItemText>
                     <span className="text-neutral-400">
-                      {formatOffset(sub.utcOffset)}
+                      {getFormattedTzOffset(sub.utcOffset)}
                     </span>
                   </div>
                 </SelectItem>
