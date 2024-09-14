@@ -5,7 +5,8 @@ import {
   createBrowserRouter,
 } from 'react-router-dom';
 
-import { AuthProvider, AuthenticationStatusEnum } from '@/auth/auth.context';
+import { AuthenticationStatusEnum } from '@/auth/auth.constants';
+import { AuthProvider } from '@/auth/auth.context';
 import { useAuth } from '@/auth/auth.hook';
 import { ProtectedRoute } from '@/auth/components';
 import { PageTitleProvider } from '@/common/contexts';

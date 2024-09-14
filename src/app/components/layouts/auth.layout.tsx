@@ -1,7 +1,7 @@
 import { PropsWithChildren } from 'react';
 import { Navigate } from 'react-router-dom';
 
-import { AuthenticationStatusEnum } from '@/auth/auth.context.tsx';
+import { AuthenticationStatusEnum } from '@/auth/auth.constants';
 import { useAuth } from '@/auth/auth.hook.ts';
 
 type AuthLayoutProps = PropsWithChildren;
