@@ -1,7 +1,7 @@
 import { PropsWithChildren } from 'react';
 import { Navigate } from 'react-router-dom';
 
-import { AuthenticationStatusEnum } from '../auth.context';
+import { AuthenticationStatusEnum } from '../auth.constants';
 import { useAuth } from '../auth.hook';
 
 const AUTH_PATH = '/auth';

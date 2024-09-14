@@ -1,16 +1,12 @@
 import axios from 'axios';
 import { PropsWithChildren, createContext, useEffect, useState } from 'react';
 
+import { authStatusStorage } from '@/auth/auth.utils';
 import { useDi } from '@/common/contexts';
 
 import { AuthApi } from './api';
+import { AuthenticationStatusEnum } from './auth.constants';
 import * as authContextTypes from './auth.context.types';
-
-enum AuthenticationStatusEnum {
-  Loading = 0,
-  Authenticated = 1,
-  UnAuthenticated = 2,
-}
 
 type AuthState = {
   status: AuthenticationStatusEnum;
@@ -52,11 +48,11 @@ const AuthProvider = (props: AuthProviderProps) => {
         password: payload.password,
       });
 
-      localStorage.setItem('is_authenticated', JSON.stringify(true));
       setState((prev) => ({
         ...prev,
         status: AuthenticationStatusEnum.Authenticated,
       }));
+      authStatusStorage.set(true);
 
       return true;
     } catch (ex) {
@@ -82,15 +78,11 @@ const AuthProvider = (props: AuthProviderProps) => {
       ...prev,
       status: AuthenticationStatusEnum.UnAuthenticated,
     }));
-    localStorage.removeItem('is_authenticated');
+    authStatusStorage.clear();
   };
 
   useEffect(() => {
-    const _isAuthenticated = localStorage.getItem('is_authenticated');
-
-    const isAuthenticated = _isAuthenticated
-      ? _isAuthenticated === 'true'
-      : false;
+    const isAuthenticated = authStatusStorage.check();
 
     setState((prev) => ({
       ...prev,
@@ -101,11 +93,11 @@ const AuthProvider = (props: AuthProviderProps) => {
 
     axios.interceptors.response.use(undefined, (response) => {
       if (response.status === 401) {
-        localStorage.removeItem('is_authenticated');
         setState((prev) => ({
           ...prev,
           status: AuthenticationStatusEnum.UnAuthenticated,
         }));
+        authStatusStorage.clear();
       }
 
       return response;
@@ -125,4 +117,4 @@ const AuthProvider = (props: AuthProviderProps) => {
   );
 };
 
-export { AuthenticationStatusEnum, AuthContext, AuthProvider };
+export { AuthContext, AuthProvider };
