@@ -1,15 +1,10 @@
-import axios, { isAxiosError } from 'axios';
+import axios from 'axios';
 import { PropsWithChildren, createContext, useEffect, useState } from 'react';
 
 import { useDi } from '@/common/contexts';
 
 import { AuthApi } from './api';
 import * as authContextTypes from './auth.context.types';
-
-type Credentials = {
-  accessToken: string;
-  expiresIn: number;
-};
 
 enum AuthenticationStatusEnum {
   Loading = 0,
@@ -19,12 +14,10 @@ enum AuthenticationStatusEnum {
 
 type AuthState = {
   status: AuthenticationStatusEnum;
-  credentials: Credentials | null;
 };
 
 const defaultState: AuthState = {
   status: AuthenticationStatusEnum.Loading,
-  credentials: null,
 };
 
 type AuthContextValue = {
@@ -54,23 +47,15 @@ const AuthProvider = (props: AuthProviderProps) => {
     }));
 
     try {
-      const credentials = await authApi.login({
+      await authApi.login({
         email: payload.email,
         password: payload.password,
       });
 
-      axios.interceptors.request.use((config) => {
-        if (config.meta && config.meta.withAuth) {
-          config.headers['Authorization'] = `Bearer ${credentials.accessToken}`;
-        }
-
-        return config;
-      });
-
+      localStorage.setItem('is_authenticated', JSON.stringify(true));
       setState((prev) => ({
         ...prev,
         status: AuthenticationStatusEnum.Authenticated,
-        credentials,
       }));
 
       return true;
@@ -97,42 +82,35 @@ const AuthProvider = (props: AuthProviderProps) => {
       ...prev,
       status: AuthenticationStatusEnum.UnAuthenticated,
     }));
+    localStorage.removeItem('is_authenticated');
   };
 
   useEffect(() => {
-    const _ = async () => {
-      try {
-        const credentials = await authApi.refresh();
+    const _isAuthenticated = localStorage.getItem('is_authenticated');
 
-        axios.interceptors.request.use((config) => {
-          if (config.meta && config.meta.withAuth) {
-            config.headers['Authorization'] =
-              `Bearer ${credentials.accessToken}`;
-          }
+    const isAuthenticated = _isAuthenticated
+      ? _isAuthenticated === 'true'
+      : false;
 
-          return config;
-        });
+    setState((prev) => ({
+      ...prev,
+      status: isAuthenticated
+        ? AuthenticationStatusEnum.Authenticated
+        : AuthenticationStatusEnum.UnAuthenticated,
+    }));
 
+    axios.interceptors.response.use(undefined, (response) => {
+      if (response.status === 401) {
+        localStorage.removeItem('is_authenticated');
         setState((prev) => ({
           ...prev,
-          status: AuthenticationStatusEnum.Authenticated,
-          credentials,
+          status: AuthenticationStatusEnum.UnAuthenticated,
         }));
-      } catch (ex) {
-        if (isAxiosError(ex)) {
-          if (ex.response && ex.response.status === 401) {
-            import.meta.env.DEV && console.log('Login required');
-            setState((prev) => ({
-              ...prev,
-              status: AuthenticationStatusEnum.UnAuthenticated,
-            }));
-          }
-        }
       }
-    };
 
-    _();
-  }, [authApi]);
+      return response;
+    });
+  }, []);
 
   return (
     <AuthContext.Provider

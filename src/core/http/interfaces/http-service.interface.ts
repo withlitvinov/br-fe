@@ -2,7 +2,6 @@ type HttpServiceOptions = {
   headers?: {
     [key: string]: string;
   };
-  withAuth?: boolean;
 };
 
 interface IHttpService {

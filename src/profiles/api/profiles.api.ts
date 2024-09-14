@@ -23,9 +23,6 @@ export class ProfilesApi {
       await this.coreApiHttpService.get<response.ProfileDto[]>(
         this.path,
         EndpointVersion.V1,
-        {
-          withAuth: true,
-        },
       ),
     );
   }
@@ -35,9 +32,6 @@ export class ProfilesApi {
       await this.coreApiHttpService.get<response.DetailedProfileDto>(
         `${this.path}/${id}`,
         EndpointVersion.V1,
-        {
-          withAuth: true,
-        },
       ),
     );
   }
@@ -51,18 +45,13 @@ export class ProfilesApi {
     return this.coreApiHttpService.post<
       response.CreatedProfileDto,
       request.CreateProfileDto
-    >(this.path, _dto, EndpointVersion.V1, {
-      withAuth: true,
-    });
+    >(this.path, _dto, EndpointVersion.V1);
   }
 
   async delete(id: string): Promise<void> {
     return this.coreApiHttpService.delete<void>(
       this.path + '/' + id,
       EndpointVersion.V1,
-      {
-        withAuth: true,
-      },
     );
   }
 }

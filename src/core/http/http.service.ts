@@ -12,9 +12,6 @@ export class HttpService implements IHttpService {
 
     const { data } = await axios.get<T>(url, {
       headers,
-      meta: {
-        withAuth: options.withAuth ?? false,
-      },
     });
 
     return data;
@@ -29,9 +26,6 @@ export class HttpService implements IHttpService {
 
     const { data } = await axios.post<T, AxiosResponse<T>, P>(url, payload, {
       headers,
-      meta: {
-        withAuth: options.withAuth ?? false,
-      },
     });
 
     return data;
@@ -46,9 +40,6 @@ export class HttpService implements IHttpService {
 
     const { data } = await axios.patch<T, AxiosResponse<T>, P>(url, payload, {
       headers,
-      meta: {
-        withAuth: options.withAuth ?? false,
-      },
     });
 
     return data;
@@ -59,9 +50,6 @@ export class HttpService implements IHttpService {
 
     const { data } = await axios.delete<T>(url, {
       headers,
-      meta: {
-        withAuth: options.withAuth ?? false,
-      },
     });
 
     return data;

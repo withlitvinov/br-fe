@@ -22,9 +22,6 @@ export class MyApi {
       await this.coreApiHttpService.get<MyResponseDto>(
         this.path,
         EndpointVersion.V1,
-        {
-          withAuth: true,
-        },
       ),
     );
   }
@@ -36,9 +33,6 @@ export class MyApi {
         time_zone: timeZone,
       },
       EndpointVersion.V1,
-      {
-        withAuth: true,
-      },
     );
   }
 }

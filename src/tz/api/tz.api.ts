@@ -27,9 +27,6 @@ export class TzApi {
       await this.coreApiHttpService.get<TimeZoneDto[]>(
         this.path,
         EndpointVersion.V1,
-        {
-          withAuth: true,
-        },
       ),
     );
   }
