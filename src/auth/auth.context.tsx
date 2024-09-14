@@ -1,30 +1,19 @@
-import axios, { isAxiosError } from 'axios';
+import axios from 'axios';
 import { PropsWithChildren, createContext, useEffect, useState } from 'react';
 
+import { authStatusStorage } from '@/auth/auth.utils';
 import { useDi } from '@/common/contexts';
 
 import { AuthApi } from './api';
+import { AuthenticationStatusEnum } from './auth.constants';
 import * as authContextTypes from './auth.context.types';
-
-type Credentials = {
-  accessToken: string;
-  expiresIn: number;
-};
-
-enum AuthenticationStatusEnum {
-  Loading = 0,
-  Authenticated = 1,
-  UnAuthenticated = 2,
-}
 
 type AuthState = {
   status: AuthenticationStatusEnum;
-  credentials: Credentials | null;
 };
 
 const defaultState: AuthState = {
   status: AuthenticationStatusEnum.Loading,
-  credentials: null,
 };
 
 type AuthContextValue = {
@@ -54,24 +43,16 @@ const AuthProvider = (props: AuthProviderProps) => {
     }));
 
     try {
-      const credentials = await authApi.login({
+      await authApi.login({
         email: payload.email,
         password: payload.password,
-      });
-
-      axios.interceptors.request.use((config) => {
-        if (config.meta && config.meta.withAuth) {
-          config.headers['Authorization'] = `Bearer ${credentials.accessToken}`;
-        }
-
-        return config;
       });
 
       setState((prev) => ({
         ...prev,
         status: AuthenticationStatusEnum.Authenticated,
-        credentials,
       }));
+      authStatusStorage.set(true);
 
       return true;
     } catch (ex) {
@@ -97,42 +78,31 @@ const AuthProvider = (props: AuthProviderProps) => {
       ...prev,
       status: AuthenticationStatusEnum.UnAuthenticated,
     }));
+    authStatusStorage.clear();
   };
 
   useEffect(() => {
-    const _ = async () => {
-      try {
-        const credentials = await authApi.refresh();
+    const isAuthenticated = authStatusStorage.check();
 
-        axios.interceptors.request.use((config) => {
-          if (config.meta && config.meta.withAuth) {
-            config.headers['Authorization'] =
-              `Bearer ${credentials.accessToken}`;
-          }
+    setState((prev) => ({
+      ...prev,
+      status: isAuthenticated
+        ? AuthenticationStatusEnum.Authenticated
+        : AuthenticationStatusEnum.UnAuthenticated,
+    }));
 
-          return config;
-        });
-
+    axios.interceptors.response.use(undefined, (response) => {
+      if (response.status === 401) {
         setState((prev) => ({
           ...prev,
-          status: AuthenticationStatusEnum.Authenticated,
-          credentials,
+          status: AuthenticationStatusEnum.UnAuthenticated,
         }));
-      } catch (ex) {
-        if (isAxiosError(ex)) {
-          if (ex.response && ex.response.status === 401) {
-            import.meta.env.DEV && console.log('Login required');
-            setState((prev) => ({
-              ...prev,
-              status: AuthenticationStatusEnum.UnAuthenticated,
-            }));
-          }
-        }
+        authStatusStorage.clear();
       }
-    };
 
-    _();
-  }, [authApi]);
+      return response;
+    });
+  }, []);
 
   return (
     <AuthContext.Provider
@@ -147,4 +117,4 @@ const AuthProvider = (props: AuthProviderProps) => {
   );
 };
 
-export { AuthenticationStatusEnum, AuthContext, AuthProvider };
+export { AuthContext, AuthProvider };

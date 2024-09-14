@@ -14,10 +14,11 @@ export class AuthApi {
 
   async login(dto: authDtos.LoginRequestDto) {
     return camelize(
-      await this.coreApiHttpService.post<
-        authDtos.LoginResponseDto,
-        authDtos.LoginRequestDto
-      >(this.path + '/login', dto, EndpointVersion.V1),
+      await this.coreApiHttpService.post<void, authDtos.LoginRequestDto>(
+        this.path + '/login',
+        dto,
+        EndpointVersion.V1,
+      ),
     );
   }
 
@@ -26,16 +27,6 @@ export class AuthApi {
       this.path + '/logout',
       undefined,
       EndpointVersion.V1,
-    );
-  }
-
-  async refresh() {
-    return camelize(
-      await this.coreApiHttpService.post<authDtos.RefreshResponseDto>(
-        this.path + '/refresh',
-        undefined,
-        EndpointVersion.V1,
-      ),
     );
   }
 }
