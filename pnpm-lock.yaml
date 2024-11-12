@@ -46,7 +46,7 @@ importers:
         version: 1.11.13
       inversify:
         specifier: ^6.0.2
-        version: 6.1.2(reflect-metadata@0.2.2)
+        version: 6.1.3(reflect-metadata@0.2.2)
       lucide-react:
         specifier: ^0.441.0
         version: 0.441.0(react@18.3.1)
@@ -1864,8 +1864,8 @@ packages:
   invariant@2.2.4:
     resolution: {integrity: sha512-phJfQVBuaJM5raOpJjSfkiD6BpbCE4Ns//LaXl6wGYtUBY83nWS6Rf9tXm2e8VaK60JEjYldbPif/A2B1C2gNA==}
 
-  inversify@6.1.2:
-    resolution: {integrity: sha512-/qAU7nVM1UmL77RfR6NTd1ye7NITUjegOjz06m3tgcZz0YIaGCsrWfQpFb3HmXMV6IKGjD/e1IeYnq3z/AoQ1w==}
+  inversify@6.1.3:
+    resolution: {integrity: sha512-B+rsxKIEh4wCj8gf3IjHSF/7lR02SepVa7b21AlYYp0JzRNzPIOC2V+1EWWzbRNj6WCbrF00XX9STDJdcCKjvg==}
 
   is-array-buffer@3.0.4:
     resolution: {integrity: sha512-wcjaerHw0ydZwfhiKbXJWLDY8A7yV7KhjQOpb83hGgGfId/aQa4TOvwyzn2PuswW2gPCYEL/nEAiSVpdOj1lXw==}
@@ -4545,7 +4545,7 @@ snapshots:
     dependencies:
       loose-envify: 1.4.0
 
-  inversify@6.1.2(reflect-metadata@0.2.2):
+  inversify@6.1.3(reflect-metadata@0.2.2):
     dependencies:
       '@inversifyjs/common': 1.3.2
       '@inversifyjs/core': 1.3.3(reflect-metadata@0.2.2)
